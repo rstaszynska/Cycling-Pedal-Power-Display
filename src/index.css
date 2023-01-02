@@ -37,3 +37,54 @@ body {
   text-align: center;
   margin-top: -5px;
 }
+
+.selection p {
+  font-size: 19px;
+  font-weight: 500;
+}
+
+.selection img{
+  height: 70%;
+}
+
+.top-row {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  width: 90vw;
+  height: 35vh;
+  margin-top: 1vh;
+}
+
+.bottom-row {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  width: 90vw;
+  height: 35vh;
+  margin-top: 36vh;
+}
+
+.darkblue {
+  width: 26%;
+  height: 75%;
+  background-color: #7CC0FF;
+  border: 10px solid #4D9FFF;
+  border-radius: 50px;
+  text-align: center;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 15px;
+}
+
+.lightblue {
+  width: 26%;
+  height: 75%;
+  background-color: #99ECF8;
+  border: 10px solid #4D9FFF;
+  border-radius: 50px;
+  text-align: center;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 15px;
+}
