@@ -14,30 +14,30 @@
         </div>
         <div class="selection">
           <div class="top-row">
-            <div class="darkblue">
+            <div class="darkblue" onclick="navigate('led');">
               <p>LED Light Bulb</p>
               <img src="images/led.png"> 
             </div>
-            <div class="lightblue">
+            <div class="lightblue" onclick="navigate('incandescent');">
               <p>Incandescent Light Bulb</p>
               <img src="images/incandescent.png"> 
             </div>
-            <div class="darkblue">
+            <div class="darkblue" onclick="navigate('kettle');">
               <p>Kettle</p>
               <img src="images/kettle.png"> 
             </div>
           </div>
 
           <div class="bottom-row">
-            <div class="lightblue">
+            <div class="lightblue" onclick="navigate('toaster');">
               <p>Toaster</p>
               <img src="images/toaster.png"> 
             </div>
-            <div class="darkblue">
+            <div class="darkblue" onclick="navigate('laptop');">
               <p>Laptop</p>
               <img src="images/laptop.png"> 
             </div>
-            <div class="lightblue">
+            <div class="lightblue" onclick="navigate('washingmachine');">
               <p>Washing Machine</p>
               <img src="images/washingmachine.png"> 
             </div>
@@ -46,6 +46,32 @@
       </div>
     </div>
 
+    <script>
+      function navigate(appliance) {
+        if (appliance === "led") {
+          location.href = "led.html";
+        }
 
+        else if (appliance === "incandescent") {
+          location.href = "incandescent.html";
+        }
+
+        else if (appliance === "kettle") {
+          location.href = "kettle.html";
+        }
+
+        else if (appliance === "toaster") {
+          location.href = "toaster.html";
+        }
+
+        else if (appliance === "laptop") {
+          location.href = "laptop.html";
+        }
+
+        else if (appliance === "washingmachine") {
+          location.href = "washingmachine.html";
+        }
+      }
+    </script>
   </body>
 </html>
