@@ -103,7 +103,18 @@ body {
 .appliance-image img {
   height: 80%;
   margin-top: 10%;
+  margin-left: 22.5%;
+}
+
+#laptop-img {
+  height: 70%;
+  margin-top: 15%;
   margin-left: 10%;
+}
+
+#toaster-img {
+  height: 55%;
+  margin-top: 22.5%;
 }
 
 .appliance-info-text {
