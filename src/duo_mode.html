@@ -36,8 +36,13 @@
     </div>
 
     <script>
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+          get: (searchParams, prop) => searchParams.get(prop),
+        });
+        let appliance = params.appliance;
+
         function go_back() {
-            location.href = "led_mode_selection.html";
+            location.href = "mode_selection.html?appliance=" + appliance;
         }
 
         function go_to_home(){
@@ -45,12 +50,12 @@
         }
 
         function select(mode) {
-            if (mode === "compete") {
-                location.href = "led_competition_mode.html"
-            }
-            else {
-                location.href = "led_cooperation_mode.html"
-            }
+          if (mode === "compete") {
+               location.href = "competition_mode.html?appliance=" + appliance;
+          }
+          else if (mode === "cooperate") {
+            location.href = "cooperation_mode.html?appliance=" + appliance;
+          }
         }
     </script>
 
