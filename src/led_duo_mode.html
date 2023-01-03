@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cycling Pedal Power Display</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <div class="outer-container">
+      <div class="content-container">
+        <div class="text-container">
+          <h1>Compete or cooperate?</h1>
+          <h2>Select mode to continue</h2>
+        </div>
+
+        <img id="back-arrow" src="images/back.png" onclick="go_back()"> 
+        <button id="home-button" onclick="go_to_home()">Selection Screen</button>
+
+        <div class="mode-selection">
+
+            <div class="darkblue mode" onclick="select('compete');">
+                <h1>Compete</h1>
+                <img src="images/compete.png"> 
+                <p>Compette in an energy-generating race</p>
+            </div>
+
+            <div class="darkblue mode" onclick="select('cooperate');">
+                <h1>Cooperate</h1>
+                <img src="images/cooperate.png"> 
+                <p>Cycle cooperatively to power on an appliance of your choice</p>
+            </div>
+        </div>
+        
+       
+      </div>
+    </div>
+
+    <script>
+        function go_back() {
+            location.href = "led_mode_selection.html";
+        }
+
+        function go_to_home(){
+            location.href = "index.html";
+        }
+
+        function select(mode) {
+            if (mode === "compete") {
+                location.href = "led_competition_mode.html"
+            }
+            else {
+                location.href = "led_cooperation_mode.html"
+            }
+        }
+    </script>
+
+  </body>
+</html>
