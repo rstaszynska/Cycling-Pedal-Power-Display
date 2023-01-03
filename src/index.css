@@ -46,6 +46,20 @@ body {
   top: 50%;
 }
 
+#home-button {
+  position: fixed;
+  height: 65px;
+  width: 120px;
+  top: 85%;
+  margin-left: 25px;
+  background-color: #D4EBFF;
+  border: 5px solid #4D9FFF;
+  border-radius: 20px;
+  color: #0075FF;
+  font-size: 18px;
+  font-weight: 600;
+}
+
 .darkblue {
   background-color: #7CC0FF;
   border: 10px solid #4D9FFF;

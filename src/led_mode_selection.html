@@ -14,6 +14,7 @@
         </div>
 
         <img id="back-arrow" src="images/back.png" onclick="go_back()"> 
+        <button id="home-button" onclick="go_to_home()">Selection Screen</button>
 
         <div class="mode-selection">
 
@@ -40,6 +41,10 @@
     <script>
         function go_back() {
             location.href = "led.html";
+        }
+
+        function go_to_home(){
+            location.href = "index.html";
         }
 
         function select(mode) {
