@@ -21,7 +21,7 @@
             <div class="darkblue mode" onclick="select('compete');">
                 <h1>Compete</h1>
                 <img src="images/compete.png"> 
-                <p>Compette in an energy-generating race</p>
+                <p>Compete in an energy-generating race</p>
             </div>
 
             <div class="darkblue mode" onclick="select('cooperate');">
@@ -31,7 +31,6 @@
             </div>
         </div>
         
-       
       </div>
     </div>
 
@@ -51,10 +50,10 @@
 
         function select(mode) {
           if (mode === "compete") {
-               location.href = "competition_mode.html?appliance=" + appliance;
+            location.href = "timer_duration_selection.html?appliance=" + appliance + "&mode=compete";
           }
           else if (mode === "cooperate") {
-            location.href = "cooperation_mode.html?appliance=" + appliance;
+            location.href = "timer_duration_selection.html?appliance=" + appliance + "&mode=cooperate";
           }
         }
     </script>
