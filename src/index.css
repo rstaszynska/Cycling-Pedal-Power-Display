@@ -1,3 +1,5 @@
+/* Base Styling  */
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
     Arial, sans-serif;
@@ -38,6 +40,25 @@ body {
   margin-top: -5px;
 }
 
+#back-arrow {
+  position: fixed;
+  height: 100px;
+  top: 50%;
+}
+
+.darkblue {
+  background-color: #7CC0FF;
+  border: 10px solid #4D9FFF;
+}
+
+.lightblue {
+  background-color: #99ECF8;
+  border: 10px solid #4D9FFF;
+}
+
+
+/* Appliance Selection Screen */
+
 .selection p {
   font-size: 19px;
   font-weight: 500;
@@ -65,16 +86,6 @@ body {
   margin-top: 36vh;
 }
 
-.darkblue {
-  background-color: #7CC0FF;
-  border: 10px solid #4D9FFF;
-}
-
-.lightblue {
-  background-color: #99ECF8;
-  border: 10px solid #4D9FFF;
-}
-
 .appliance-button {
   width: 26%;
   height: 75%;
@@ -84,6 +95,9 @@ body {
   margin-right: 20px;
   margin-top: 15px;
 }
+
+
+/* Appliance Information Screen  */
 
 .appliance-info {
   width: 75%;
@@ -126,12 +140,6 @@ body {
   margin-top: 10%;
 }
 
-#back-arrow {
-  position: fixed;
-  height: 100px;
-  top: 50%;
-}
-
 #selection-button {
   height: 90px;
   width: 300px;
@@ -140,5 +148,57 @@ body {
   border: 10px solid #4D9FFF;
   border-radius: 15px;
   font-size: 40px;
+}
 
+
+/* Mode Selection Screen */
+
+.mode-selection {
+  height: 70%;
+  width: 75vw;
+  display: flex;
+  margin: 0 auto;
+  justify-content: center;
+} 
+
+.mode {
+  height: 33vw;
+  width: 40vw;
+  margin: 2.5vw 1.5vw;
+  border-radius: 50px;
+  text-align: center;
+}
+
+.mode p {
+  font-size: 20px;
+}
+
+#solo-mode p {
+  margin-top: 3vw;
+}
+
+.mode img {
+  height: 20vw;
+  width: 20vw;
+}
+
+.duo-mode-imgs {
+  justify-content: center;
+}
+
+.duo-mode-imgs img {
+  position: relative;
+}
+
+#duo-mode-img-left {
+  height: 19vw;
+  width: 19vw;
+  z-index: 1;
+  margin-left: -8vw;
+}
+
+#duo-mode-img-right {
+  z-index: 2;
+  margin-top: -17vw;
+  margin-left: 8vw;
 }

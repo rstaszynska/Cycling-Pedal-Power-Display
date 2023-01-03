@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cycling Pedal Power Display</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <div class="outer-container">
+      <div class="content-container">
+        <div class="text-container">
+          <h1>Cycle in solo or duo mode</h1>
+          <h2>Select mode to get started</h2>
+        </div>
+
+        <img id="back-arrow" src="images/back.png" onclick="go_back()"> 
+
+        <div class="mode-selection">
+
+            <div class="lightblue mode" id="solo-mode" onclick="select('solo mode');">
+                <h1>Solo mode</h1>
+                <img id="solo-mode-img" src="images/girl-on-bicycle.png"> 
+                <p>Take on the challenge solo</p>
+            </div>
+
+            <div class="darkblue mode" onclick="select('duo mode');">
+                <h1>Duo mode</h1>
+                <div class="duo-mode-imgs">
+                    <img id="duo-mode-img-left" src="images/boy-on-bicycle.png"> 
+                    <img id="duo-mode-img-right" src="images/girl-on-bicycle-white.png"> 
+                </div>
+                <p>Challenge an opponent in an energy-generating race or work cooperatively</p>
+            </div>
+        </div>
+        
+       
+      </div>
+    </div>
+
+    <script>
+        function go_back() {
+            location.href = "led.html";
+        }
+
+        function select(mode) {
+            if (mode === "solo mode") {
+                location.href = "led_solo_mode.html"
+            }
+            else {
+                location.href = "led_duo_mode.html"
+            }
+        }
+    </script>
+
+  </body>
+</html>
