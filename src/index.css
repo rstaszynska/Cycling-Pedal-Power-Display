@@ -236,3 +236,78 @@ body {
 .timer_selection h1 {
   font-weight: 600;
 }
+
+
+/* Challenge Screen */
+
+.challenge-screen {
+  width: 75%;
+  height: 60%;
+  border-radius: 50px;
+  text-align: center;
+  margin: 0 auto;
+  margin-top: 5%;
+  display: flex;
+}
+
+.left {
+  height: 100%;
+  width: 33%;
+  justify-content: left;
+}
+
+.left img {
+  height: 65%;
+}
+
+#appliance-name {
+  margin-top: 5vh;
+}
+
+#appliance-wattage {
+  margin-top: -1.5vh;
+  font-size: 16px;
+}
+
+.middle {
+  height: 100%;
+  width: 33%;
+}
+
+#start-button {
+  position: relative;
+  height: 120px;
+  width: 100%;
+  background-color: black;
+  color: white;
+  border: 10px solid #4D9FFF;
+  border-radius: 20px;
+  font-size: 60px;
+  font-weight: 600;
+  margin-top: 20vh;
+}
+
+.right {
+  height: 100%;
+  width: 33%;
+}
+
+.right p {
+  margin-top: 5vh;
+}
+
+.right img {
+  height: 45%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#image-right {
+  margin-top: -300px;
+  margin-left: 50px;
+}
+
+#image-left {
+  margin-right: 70px;
+  margin-left: -10px;
+}

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cycling Pedal Power Display</title>
+    
+
+    <link rel="stylesheet" href="index.css" />
+    
+
+  </head>
+  <body>
+    <div class="outer-container">
+      <div class="content-container">
+        <div class="text-container">
+          <h1>Are you ready?</h1>
+          <h2>Sit comfortably and select start when you're ready to begin</h2>
+        </div>
+
+        <img id="back-arrow" src="images/back.png" onclick="go_back()"> 
+        <button id="home-button" onclick="go_to_home()">Selection Screen</button>
+
+        <div class="challenge-screen box-styling">
+            <div class="left">
+                <div>
+                    <h2 id="appliance-name"></h2>
+                    <p id="appliance-wattage"></p>
+                </div>
+                <img id="chosen-appliance-img"> 
+            </div>
+
+            <div class="middle">
+                <button id="start-button" onclick="select()"> START </button>
+            </div>
+            
+            <div class="right">
+                <p>You have chosen:</p>
+                <h2 id="mode"></h2>
+                <!-- <img id="mode-img" src="images/girl-on-bicycle.png">  -->
+                <img id="image-left" src="images/boy-on-bicycle.png"> 
+                <img id="image-right" src="images/girl-on-bicycle-white.png"> 
+                <h3 id="duration"></h3>
+            </div>
+        </div>
+       
+      </div>
+    </div>
+
+    <script>
+        const params = new Proxy(new URLSearchParams(window.location.search), {
+        get: (searchParams, prop) => searchParams.get(prop),
+        });
+        let appliance = params.appliance;
+        let mode = params.mode;
+        let duration = params.duration;
+
+        const timer = document.querySelector('#duration')
+        timer.innerHTML = duration;
+        const mode_type = document.querySelector('#mode')
+        mode_type.innerHTML = mode;
+        const box_styling = document.querySelector('.box-styling');
+        box_styling.style.border = '10px solid #4D9FFF';
+        const appliance_img = document.querySelector('#chosen-appliance-img');
+        appliance_img.src = "images/" + appliance + ".png";
+        const name = document.querySelector('#appliance-name');
+        const wattage = document.querySelector('#appliance-wattage');
+
+        if (appliance === "led" || appliance === "kettle" || appliance === "laptop") {
+            box_styling.style.backgroundColor = '#7CC0FF';
+            if (appliance === "led") {
+                name.innerHTML = "LED Light Bulb";
+                wattage.innerHTML = "W";
+            }
+            else if (appliance === "kettle") {
+                name.innerHTML = "Electric Kettle";
+                wattage.innerHTML = "W";
+            }
+            else if (appliance === "laptop") {
+                name.innerHTML = "Laptop";
+                name.style.marginTop = "10vh";
+                wattage.innerHTML = "W";
+                appliance_img.style.height = "47.5%";
+                appliance_img.style.marginTop = "1vh";
+            }
+        }
+        else {
+            box_styling.style.backgroundColor = '#99ECF8';
+            if (appliance === "incandescent") {
+                name.innerHTML = "Incandescent Light Bulb";
+                wattage.innerHTML = "W";
+            }
+            else if (appliance === "toaster") {
+                name.innerHTML = "Toaster";
+                name.style.marginTop = "10vh";
+                wattage.innerHTML = "W";
+                appliance_img.style.height = "40%";
+                appliance_img.style.marginTop = "1vh";
+            }
+            else if (appliance === "washingmachine") {
+                name.innerHTML = "Washing Machine";
+                wattage.innerHTML = "W";
+            }
+        }
+
+        if (mode === "Solo Mode"){
+            const image_to_hide = document.querySelector('#image-right');
+            image_to_hide.style.display = "none";
+
+            const image_to_show = document.querySelector('#image-left');
+            image_to_show.src = "images/girl-on-bicycle.png";
+            image_to_show.style.marginRight = "0px";
+        }
+
+        function go_back() {     
+            location.href = "timer_duration_selection.html?appliance=" + appliance + "&mode=" + mode;
+        }
+
+        function go_to_home(){
+            location.href = "index.html";
+        }
+
+        // function select(duration){
+        //     location.href = "challenge_screen.html?appliance=" + appliance + "&mode=" + mode + "&duration=" + duration;
+        // }
+    </script>
+  </body>
+</html>
