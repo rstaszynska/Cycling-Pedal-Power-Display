@@ -13,8 +13,8 @@
     <div class="outer-container">
       <div class="content-container">
         <div class="text-container">
-          <h1 id="heading"></h1>
-          <h2>Cycle to generate electricity</h2>
+          <h1>Are you ready?</h1>
+          <h2>Sit comfortably and select start when you're ready to begin</h2>
         </div>
 
         <img id="back-arrow" src="images/back.png" onclick="go_back()"> 
@@ -30,13 +30,15 @@
             </div>
 
             <div class="middle">
-                
+                <button id="start-button" onclick="start()"> START </button>
             </div>
             
             <div class="right">
-                <p id="timer-label">TIME REMAINING</p>
-                <p id="timer"></p>
-
+                <p>You have chosen:</p>
+                <h2 id="mode"></h2>
+                <img id="image-left" src="images/boy-on-bicycle.png"> 
+                <img id="image-right" src="images/girl-on-bicycle-white.png"> 
+                <h3 id="duration"></h3>
             </div>
         </div>
        
@@ -51,53 +53,14 @@
         let mode = params.mode;
         let duration = params.duration;
 
-        if (duration === "No timer") {
-            document.getElementById("timer").innerHTML = "No timer";
-        }
-
-        else {
-            if (duration === "30 seconds") {
-                var time = new Date().getTime()+ 32000;
-            }
-            else if (duration === "1 minute") {
-                var time = new Date().getTime()+ 62000;
-            }
-            else if (duration === "3 minutes") {
-                var time = new Date().getTime()+ 182000;
-            }
-            
-            var x = setInterval(function() {
-                var distance = time - new Date().getTime();
-
-                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                if (seconds < 10) {
-                    seconds = "0" + seconds;
-                }
-
-                if (distance > 0) {
-                    document.getElementById("timer").innerHTML = minutes + ":" + seconds;
-                }
-    
-                else {
-                    clearInterval(x);
-                }
-
-            }, 1000);
-        }
-
-        if (appliance === "led" || appliance === "incandescent") {
-            document.querySelector('#heading').innerHTML = "Can you power an " + appliance + " light bulb?";
-        }
-        else {
-            document.querySelector('#heading').innerHTML = "Can you power a " + appliance + "?";
-        }
-
-        const box_styling = document.querySelector('.box-styling')
+        const timer = document.querySelector('#duration')
+        timer.innerHTML = duration;
+        const mode_type = document.querySelector('#mode')
+        mode_type.innerHTML = mode;
+        const box_styling = document.querySelector('.box-styling');
         box_styling.style.border = '10px solid #4D9FFF';
-        document.querySelector('#chosen-appliance-img').src = "images/" + appliance + ".png";
-    
+        const appliance_img = document.querySelector('#chosen-appliance-img');
+        appliance_img.src = "images/" + appliance + ".png";
         const name = document.querySelector('#appliance-name');
         const wattage = document.querySelector('#appliance-wattage');
 
@@ -139,7 +102,12 @@
         }
 
         if (mode === "Solo Mode"){
-            
+            const image_to_hide = document.querySelector('#image-right');
+            image_to_hide.style.display = "none";
+
+            const image_to_show = document.querySelector('#image-left');
+            image_to_show.src = "images/girl-on-bicycle.png";
+            image_to_show.style.marginRight = "0px";
         }
 
         function go_back() {     
@@ -151,7 +119,7 @@
         }
 
         function start(){
-            location.href = "challenge_screen.html";
+            location.href = "challenge_screen.html?appliance=" + appliance + "&mode=" + mode + "&duration=" + duration;
         }
     </script>
   </body>

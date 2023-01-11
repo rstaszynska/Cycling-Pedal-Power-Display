@@ -238,7 +238,7 @@ body {
 }
 
 
-/* Challenge Screen */
+/* Start + Challenge Screen */
 
 .challenge-screen {
   width: 75%;
@@ -310,4 +310,25 @@ body {
 #image-left {
   margin-right: 70px;
   margin-left: -10px;
+}
+
+@font-face {
+  font-family: K2DBold;
+  src: url("fonts/K2D/K2D-Bold.ttf");
+}
+
+@font-face {
+  font-family: K2DLight;
+  src: url("fonts/K2D/K2D-Light.ttf");
+}
+
+#timer-label {
+  font-size: 25px;
+  font-family: K2DLight;
+}
+
+#timer {
+  font-size: 75px;
+  font-family: K2DBold;
+  margin-top: -30px;
 }
