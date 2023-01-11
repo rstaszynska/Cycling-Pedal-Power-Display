@@ -30,7 +30,11 @@
             </div>
 
             <div class="middle">
-                
+                <div id="progress-circle"></div>
+                <div id="progress-text">
+                    <p id="progress-percentage"></p>
+                    <p>of power generated</p>
+                </div>
             </div>
             
             <div class="right">
@@ -51,6 +55,69 @@
         let mode = params.mode;
         let duration = params.duration;
 
+
+        if (appliance === "led" || appliance === "incandescent") {
+            document.querySelector('#heading').innerHTML = "Can you power an " + appliance + " light bulb?";
+        }
+        else {
+            document.querySelector('#heading').innerHTML = "Can you power a " + appliance + "?";
+        }
+
+        const box_styling = document.querySelector('.box-styling')
+        box_styling.style.border = '10px solid #4D9FFF';
+        const progress_circle = document.querySelector('#progress-circle');
+        const appliance_img = document.querySelector('#chosen-appliance-img');
+        appliance_img.src = "images/" + appliance + ".png";
+    
+        const name = document.querySelector('#appliance-name');
+        const wattage = document.querySelector('#appliance-wattage');
+
+        var background_color;
+        var secondary_color;
+
+        if (appliance === "led" || appliance === "kettle" || appliance === "laptop") {
+            background_color = "#7CC0FF";
+            secondary_color = "#b5dbfc";
+
+            if (appliance === "led") {
+                name.innerHTML = "LED Light Bulb";
+                wattage.innerHTML = "W";
+            }
+            else if (appliance === "kettle") {
+                name.innerHTML = "Electric Kettle";
+                wattage.innerHTML = "W";
+            }
+            else if (appliance === "laptop") {
+                name.innerHTML = "Laptop";
+                name.style.marginTop = "10vh";
+                wattage.innerHTML = "W";
+                appliance_img.style.height = "47.5%";
+                appliance_img.style.marginTop = "1vh";
+            }
+        }
+        else {
+            background_color = "#99ECF8";
+            secondary_color = "#baf3fc";
+
+            if (appliance === "incandescent") {
+                name.innerHTML = "Incandescent Light Bulb";
+                wattage.innerHTML = "W";
+            }
+            else if (appliance === "toaster") {
+                name.innerHTML = "Toaster";
+                name.style.marginTop = "10vh";
+                wattage.innerHTML = "W";
+                appliance_img.style.height = "40%";
+                appliance_img.style.marginTop = "1vh";
+            }
+            else if (appliance === "washingmachine") {
+                name.innerHTML = "Washing Machine";
+                wattage.innerHTML = "W";
+            }
+        }
+
+        box_styling.style.backgroundColor = background_color;
+        
         if (duration === "No timer") {
             document.getElementById("timer").innerHTML = "No timer";
         }
@@ -71,7 +138,7 @@
 
                 var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
+ 
                 if (seconds < 10) {
                     seconds = "0" + seconds;
                 }
@@ -83,64 +150,14 @@
                 else {
                     clearInterval(x);
                 }
-
+                
             }, 1000);
         }
 
-        if (appliance === "led" || appliance === "incandescent") {
-            document.querySelector('#heading').innerHTML = "Can you power an " + appliance + " light bulb?";
-        }
-        else {
-            document.querySelector('#heading').innerHTML = "Can you power a " + appliance + "?";
-        }
-
-        const box_styling = document.querySelector('.box-styling')
-        box_styling.style.border = '10px solid #4D9FFF';
-        document.querySelector('#chosen-appliance-img').src = "images/" + appliance + ".png";
-    
-        const name = document.querySelector('#appliance-name');
-        const wattage = document.querySelector('#appliance-wattage');
-
-        if (appliance === "led" || appliance === "kettle" || appliance === "laptop") {
-            box_styling.style.backgroundColor = '#7CC0FF';
-            if (appliance === "led") {
-                name.innerHTML = "LED Light Bulb";
-                wattage.innerHTML = "W";
-            }
-            else if (appliance === "kettle") {
-                name.innerHTML = "Electric Kettle";
-                wattage.innerHTML = "W";
-            }
-            else if (appliance === "laptop") {
-                name.innerHTML = "Laptop";
-                name.style.marginTop = "10vh";
-                wattage.innerHTML = "W";
-                appliance_img.style.height = "47.5%";
-                appliance_img.style.marginTop = "1vh";
-            }
-        }
-        else {
-            box_styling.style.backgroundColor = '#99ECF8';
-            if (appliance === "incandescent") {
-                name.innerHTML = "Incandescent Light Bulb";
-                wattage.innerHTML = "W";
-            }
-            else if (appliance === "toaster") {
-                name.innerHTML = "Toaster";
-                name.style.marginTop = "10vh";
-                wattage.innerHTML = "W";
-                appliance_img.style.height = "40%";
-                appliance_img.style.marginTop = "1vh";
-            }
-            else if (appliance === "washingmachine") {
-                name.innerHTML = "Washing Machine";
-                wattage.innerHTML = "W";
-            }
-        }
-
-        if (mode === "Solo Mode"){
-            
-        }
+        var percentage = 0;
+        angle = percentage * 0.01 * 360;
+        progress_circle.style.background = "radial-gradient(" + background_color + " 50%, transparent 51%), conic-gradient(black 0deg " + angle + "deg, " + secondary_color + " " + (angle+1) + "deg 360deg)";
+        document.querySelector('#progress-percentage').innerHTML = percentage + "%";
 
         function go_back() {     
             location.href = "timer_duration_selection.html?appliance=" + appliance + "&mode=" + mode;
@@ -150,9 +167,6 @@
             location.href = "index.html";
         }
 
-        function start(){
-            location.href = "challenge_screen.html";
-        }
     </script>
   </body>
 </html>

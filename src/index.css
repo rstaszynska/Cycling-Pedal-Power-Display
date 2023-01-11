@@ -332,3 +332,23 @@ body {
   font-family: K2DBold;
   margin-top: -30px;
 }
+
+#progress-circle {
+  border-radius: 50%;
+  width: 38vh;
+  height: 38vh;
+  margin: 0 auto;
+  margin-top: 15%;
+}
+
+#progress-text {
+  margin-top: -95%;
+  z-index: 1;
+  text-align: center;
+  margin-left: 20px;
+}
+
+#progress-percentage {
+  font-size: 80px;
+  margin-bottom: 0;
+}
