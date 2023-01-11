@@ -3,11 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>Cycling Pedal Power Display</title>
-    
-
     <link rel="stylesheet" href="index.css" />
-    
-
   </head>
   <body>
     <div class="outer-container">
@@ -40,7 +36,7 @@
             <div class="right">
                 <p id="timer-label">TIME REMAINING</p>
                 <p id="timer"></p>
-
+                <button id="button" onclick="pause_or_resume_timer()"> PAUSE </button>
             </div>
         </div>
        
@@ -117,7 +113,9 @@
         }
 
         box_styling.style.backgroundColor = background_color;
-        
+
+        var timer_paused = false;
+
         if (duration === "No timer") {
             document.getElementById("timer").innerHTML = "No timer";
         }
@@ -134,23 +132,27 @@
             }
             
             var x = setInterval(function() {
-                var distance = time - new Date().getTime();
+                if ( !timer_paused ) {
+                    var distance = time - new Date().getTime();
 
-                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
- 
-                if (seconds < 10) {
-                    seconds = "0" + seconds;
-                }
+                    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-                if (distance > 0) {
-                    document.getElementById("timer").innerHTML = minutes + ":" + seconds;
+                    if (seconds < 10) {
+                        seconds = "0" + seconds;
+                    }
+
+                    if (distance > 0) {
+                        document.getElementById("timer").innerHTML = minutes + ":" + seconds;
+                    }
+
+                    else {
+                        clearInterval(x);
+                    }
                 }
-    
                 else {
-                    clearInterval(x);
+                    time += 1000;
                 }
-                
             }, 1000);
         }
 
@@ -158,6 +160,17 @@
         angle = percentage * 0.01 * 360;
         progress_circle.style.background = "radial-gradient(" + background_color + " 50%, transparent 51%), conic-gradient(black 0deg " + angle + "deg, " + secondary_color + " " + (angle+1) + "deg 360deg)";
         document.querySelector('#progress-percentage').innerHTML = percentage + "%";
+
+        function pause_or_resume_timer() {
+            if (!timer_paused) {
+                timer_paused = true;
+                document.getElementById("button").innerHTML = "RESUME";
+            }
+            else {
+                timer_paused = false;
+                document.getElementById("button").innerHTML = "PAUSE";
+            }
+        }
 
         function go_back() {     
             location.href = "timer_duration_selection.html?appliance=" + appliance + "&mode=" + mode;

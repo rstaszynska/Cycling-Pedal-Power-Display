@@ -274,10 +274,10 @@ body {
   width: 33%;
 }
 
-#start-button {
+#button {
   position: relative;
   height: 120px;
-  width: 100%;
+  width: 80%;
   background-color: black;
   color: white;
   border: 10px solid #4D9FFF;
