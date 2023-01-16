@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -16,14 +16,37 @@ const createWindow = () => {
     },
   });
 
-  // and load the index.html of the app.
-  mainWindow.loadFile(path.join(__dirname, 'index.html'));
+  // // and load the index.html of the app.
+  // mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools();
-
+  mainWindow.webContents.openDevTools();
+  
   // const win = new BrowserWindow({ width: 800, height: 600 })
   // win.loadFile(path.join(__dirname, 'index.html'));
+
+  mainWindow.webContents.on('select-bluetooth-device', (event, deviceList, callback) => {
+    event.preventDefault()
+    if (deviceList && deviceList.length > 0) {
+      callback(deviceList[0].deviceId)
+    } 
+  })
+  
+  // Listen for a message from the renderer to get the response for the Bluetooth pairing.
+  ipcMain.on('bluetooth-pairing-response', (event, response) => {
+    bluetoothPinCallback(response)
+  })
+  
+  mainWindow.webContents.session.setBluetoothPairingHandler((details, callback) => {
+  
+    bluetoothPinCallback = callback
+    // Send a message to the renderer to prompt the user to confirm the pairing.
+    mainWindow.webContents.send('bluetooth-pairing-request', details)
+  })  
+  
+   // and load the index.html of the app.
+   mainWindow.loadFile(path.join(__dirname, 'index.html'));
+    
 };
 
 // This method will be called when Electron has finished
@@ -39,6 +62,8 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+
+
 
 app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
