@@ -1,62 +1,58 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Cycling Pedal Power Display</title>
-    <link rel="stylesheet" href="index.css" />
-  </head>
-  <body>
-    <div class="outer-container">
-      <div class="content-container">
-        <div class="text-container">
-          <h1>Compete or cooperate?</h1>
-          <h2>Select mode to continue</h2>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Cycling Pedal Power Display</title>
+        <link rel="stylesheet" href="index.css" />
+    </head>
+    <body>
+        <div class="outer-container">
+            <div class="content-container">
+                <div class="text-container">
+                    <h1>Compete or cooperate?</h1>
+                    <h2>Select mode to continue</h2>
+                </div>
+
+                <img id="back-arrow" src="images/back.png" onclick="go_back()" />
+                <button id="home-button" onclick="go_to_home()">Selection Screen</button>
+
+                <div class="mode-selection">
+                    <div class="darkblue mode" onclick="select('compete');">
+                        <h1>Compete</h1>
+                        <img src="images/compete.png" />
+                        <p>Compete in an energy-generating race</p>
+                    </div>
+
+                    <div class="darkblue mode" onclick="select('cooperate');">
+                        <h1>Cooperate</h1>
+                        <img src="images/cooperate.png" />
+                        <p>Cycle cooperatively to power on an appliance of your choice</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <img id="back-arrow" src="images/back.png" onclick="go_back()"> 
-        <button id="home-button" onclick="go_to_home()">Selection Screen</button>
+        <script>
+            const params = new Proxy(new URLSearchParams(window.location.search), {
+                get: (searchParams, prop) => searchParams.get(prop),
+            });
+            let appliance = params.appliance;
 
-        <div class="mode-selection">
+            function go_back() {
+                location.href = "mode_selection.html?appliance=" + appliance;
+            }
 
-            <div class="darkblue mode" onclick="select('compete');">
-                <h1>Compete</h1>
-                <img src="images/compete.png"> 
-                <p>Compete in an energy-generating race</p>
-            </div>
+            function go_to_home() {
+                location.href = "index.html";
+            }
 
-            <div class="darkblue mode" onclick="select('cooperate');">
-                <h1>Cooperate</h1>
-                <img src="images/cooperate.png"> 
-                <p>Cycle cooperatively to power on an appliance of your choice</p>
-            </div>
-        </div>
-        
-      </div>
-    </div>
-
-    <script>
-        const params = new Proxy(new URLSearchParams(window.location.search), {
-          get: (searchParams, prop) => searchParams.get(prop),
-        });
-        let appliance = params.appliance;
-
-        function go_back() {
-            location.href = "mode_selection.html?appliance=" + appliance;
-        }
-
-        function go_to_home(){
-            location.href = "index.html";
-        }
-
-        function select(mode) {
-          if (mode === "compete") {
-            location.href = "timer_duration_selection.html?appliance=" + appliance + "&mode=Competition Mode";
-          }
-          else if (mode === "cooperate") {
-            location.href = "timer_duration_selection.html?appliance=" + appliance + "&mode=Cooperation Mode";
-          }
-        }
-    </script>
-
-  </body>
+            function select(mode) {
+                if (mode === "compete") {
+                    location.href = "timer_duration_selection.html?appliance=" + appliance + "&mode=Competition Mode";
+                } else if (mode === "cooperate") {
+                    location.href = "timer_duration_selection.html?appliance=" + appliance + "&mode=Cooperation Mode";
+                }
+            }
+        </script>
+    </body>
 </html>

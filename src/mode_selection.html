@@ -1,60 +1,58 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Cycling Pedal Power Display</title>
-    <link rel="stylesheet" href="index.css" />
-  </head>
-  <body>
-    <div class="outer-container">
-      <div class="content-container">
-        <div class="text-container">
-          <h1>Cycle in solo or duo mode</h1>
-          <h2>Select mode to get started</h2>
-        </div>
-        <img id="back-arrow" src="images/back.png" onclick="go_back()"> 
-        <button id="home-button" onclick="go_to_home()">Selection Screen</button>
-        <div class="mode-selection">
-            <div class="lightblue mode" id="solo-mode" onclick="select('solo mode');">
-                <h1>Solo mode</h1>
-                <img id="solo-mode-img" src="images/girl-on-bicycle.png"> 
-                <p>Take on the challenge solo</p>
-            </div>
-            <div class="darkblue mode" onclick="select('duo mode');">
-                <h1>Duo mode</h1>
-                <div class="duo-mode-imgs">
-                    <img id="duo-mode-img-left" src="images/boy-on-bicycle.png"> 
-                    <img id="duo-mode-img-right" src="images/girl-on-bicycle-white.png"> 
+    <head>
+        <meta charset="UTF-8" />
+        <title>Cycling Pedal Power Display</title>
+        <link rel="stylesheet" href="index.css" />
+    </head>
+    <body>
+        <div class="outer-container">
+            <div class="content-container">
+                <div class="text-container">
+                    <h1>Cycle in solo or duo mode</h1>
+                    <h2>Select mode to get started</h2>
                 </div>
-                <p>Challenge an opponent in an energy-generating race or work cooperatively</p>
+                <img id="back-arrow" src="images/back.png" onclick="go_back()" />
+                <button id="home-button" onclick="go_to_home()">Selection Screen</button>
+                <div class="mode-selection">
+                    <div class="lightblue mode" id="solo-mode" onclick="select('solo mode');">
+                        <h1>Solo mode</h1>
+                        <img id="solo-mode-img" src="images/girl-on-bicycle.png" />
+                        <p>Take on the challenge solo</p>
+                    </div>
+                    <div class="darkblue mode" onclick="select('duo mode');">
+                        <h1>Duo mode</h1>
+                        <div class="duo-mode-imgs">
+                            <img id="duo-mode-img-left" src="images/boy-on-bicycle.png" />
+                            <img id="duo-mode-img-right" src="images/girl-on-bicycle-white.png" />
+                        </div>
+                        <p>Challenge an opponent in an energy-generating race or work cooperatively</p>
+                    </div>
+                </div>
             </div>
         </div>
-      </div>
-    </div>
 
-    <script>
-      const params = new Proxy(new URLSearchParams(window.location.search), {
-        get: (searchParams, prop) => searchParams.get(prop),
-      });
-      let appliance = params.appliance;
+        <script>
+            const params = new Proxy(new URLSearchParams(window.location.search), {
+                get: (searchParams, prop) => searchParams.get(prop),
+            });
+            let appliance = params.appliance;
 
-      function go_back() {
-        location.href = appliance + ".html";
-      }
+            function go_back() {
+                location.href = appliance + ".html";
+            }
 
-      function go_to_home(){
-        location.href = "index.html";
-      }
+            function go_to_home() {
+                location.href = "index.html";
+            }
 
-      function select(mode) {
-          if (mode === "solo mode") {
-              location.href = "timer_duration_selection.html?appliance=" + appliance + "&mode=Solo Mode";
-          }
-          else {
-              location.href = "duo_mode.html?appliance=" + appliance;
-          }
-        }
-    </script>
-
-  </body>
+            function select(mode) {
+                if (mode === "solo mode") {
+                    location.href = "timer_duration_selection.html?appliance=" + appliance + "&mode=Solo Mode";
+                } else {
+                    location.href = "duo_mode.html?appliance=" + appliance;
+                }
+            }
+        </script>
+    </body>
 </html>

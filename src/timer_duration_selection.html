@@ -1,56 +1,61 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Cycling Pedal Power Display</title>
-    <link rel="stylesheet" href="index.css" />
-  </head>
-  <body>
-    <div class="outer-container">
-      <div class="content-container">
-        <div class="text-container">
-          <h1>Choose a timer duration</h1>
-          <h2>Or cycle without a timer</h2>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Cycling Pedal Power Display</title>
+        <link rel="stylesheet" href="index.css" />
+    </head>
+    <body>
+        <div class="outer-container">
+            <div class="content-container">
+                <div class="text-container">
+                    <h1>Choose a timer duration</h1>
+                    <h2>Or cycle without a timer</h2>
+                </div>
+
+                <img id="back-arrow" src="images/back.png" onclick="go_back()" />
+                <button id="home-button" onclick="go_to_home()">Selection Screen</button>
+
+                <div class="timer_selection">
+                    <button class="darkblue timer_option" onclick="select('30 seconds');">
+                        <h1>30 seconds</h1>
+                    </button>
+                    <button class="lightblue timer_option" onclick="select('1 minute');">
+                        <h1>1 minute</h1>
+                    </button>
+                    <button class="darkblue timer_option" onclick="select('3 minutes');">
+                        <h1>3 minutes</h1>
+                    </button>
+                    <button class="lightblue timer_option" onclick="select('No timer');">
+                        <h1>No timer</h1>
+                    </button>
+                </div>
+            </div>
         </div>
 
-        <img id="back-arrow" src="images/back.png" onclick="go_back()"> 
-        <button id="home-button" onclick="go_to_home()">Selection Screen</button>
+        <script>
+            const params = new Proxy(new URLSearchParams(window.location.search), {
+                get: (searchParams, prop) => searchParams.get(prop),
+            });
+            let appliance = params.appliance;
+            let mode = params.mode;
+            console.log(mode);
 
-        <div class="timer_selection">
-            <button class="darkblue timer_option" onclick="select('30 seconds');"><h1>30 seconds</h1></button>
-            <button class="lightblue timer_option" onclick="select('1 minute');"><h1>1 minute</h1></button>
-            <button class="darkblue timer_option" onclick="select('3 minutes');"><h1>3 minutes</h1></button>
-            <button class="lightblue timer_option" onclick="select('No timer');"><h1>No timer</h1></button>
-        </div>
-      </div>
-    </div>
-
-    <script>
-        const params = new Proxy(new URLSearchParams(window.location.search), {
-          get: (searchParams, prop) => searchParams.get(prop),
-        });
-        let appliance = params.appliance;
-        let mode = params.mode;
-        console.log(mode);
-
-        function go_back() {
-            if (mode === "solo"){
-                location.href = "mode_selection.html?appliance=" + appliance;
+            function go_back() {
+                if (mode === "solo") {
+                    location.href = "mode_selection.html?appliance=" + appliance;
+                } else {
+                    location.href = "duo_mode.html?appliance=" + appliance;
+                }
             }
 
-            else {
-                location.href = "duo_mode.html?appliance=" + appliance;
+            function go_to_home() {
+                location.href = "index.html";
             }
-        }
 
-        function go_to_home(){
-            location.href = "index.html";
-        }
-
-        function select(duration){
-            location.href = "start_screen.html?appliance=" + appliance + "&mode=" + mode + "&duration=" + duration;
-        }
-    </script>
-
-  </body>
+            function select(duration) {
+                location.href = "start_screen.html?appliance=" + appliance + "&mode=" + mode + "&duration=" + duration;
+            }
+        </script>
+    </body>
 </html>
