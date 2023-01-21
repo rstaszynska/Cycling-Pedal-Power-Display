@@ -41,6 +41,125 @@
         </div>
 
         <script>
+            var bicycleConnected = false;
+
+            /* =========================================================================================================
+                Portions of the following code have been adapted from software released under the MIT license:
+                Project: PedalPower https://github.com/Tankiolegend/PedalPower
+            */
+
+            var bike1pwr = 0;
+            var bike2pwr = 0;
+
+            class Bicycle {
+                device;
+
+                async connectBicycle(bicycleNumber) {
+                    await navigator.bluetooth
+                        .requestDevice({
+                            // acceptAllDevices: true
+                            filters: [
+                                {
+                                    services: ["00001818-0000-1000-8000-00805f9b34fb"],
+                                },
+                            ],
+                        })
+                        .then((device) => {
+                            this.device = device;
+                            this.device.addEventListener("gattserverd", function () {
+                                setTimeout(function () {
+                                    reconnectBicycle(bicycleNumber);
+                                }, 2000);
+                            });
+
+                            this.startConnection(bicycleNumber);
+                            bicycleConnected = true;
+                        });
+                }
+
+                async startConnection(bicycleNumber) {
+                    await this.device.gatt
+                        .connect()
+                        .then((reserver) => {
+                            return reserver.getPrimaryService("00001818-0000-1000-8000-00805f9b34fb");
+                        })
+                        .then((service) => {
+                            return service.getCharacteristic("00002a63-0000-1000-8000-00805f9b34fb");
+                        })
+                        .then((characteristic) => characteristic.startNotifications())
+
+                        .then((characteristic) => {
+                            characteristic.addEventListener("characteristicvaluechanged", function () {
+                                testChange(event, bicycleNumber);
+                            });
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                        });
+                }
+
+                async disconnectDevice() {
+                    await this.device.gatt.disconnect();
+                }
+
+                isConnected() {
+                    if (typeof this.device === "undefined") {
+                        return false;
+                    } else {
+                        return this.device.gatt.connected;
+                    }
+                }
+            }
+
+            const deviceOne = new Bicycle();
+            const deviceTwo = new Bicycle();
+
+            async function connectBicycle(bicycleNumber) {
+                if (bicycleNumber == 1) {
+                    await deviceOne.connectBicycle(bicycleNumber);
+                } else {
+                    await deviceTwo.connectBicycle(bicycleNumber);
+                }
+            }
+
+            async function reconnectBicycle(bicycleNumber) {
+                if (bicycleNumber == 1) {
+                    await deviceOne.startConnection(bicycleNumber);
+                    if (!deviceOne.isConnected()) {
+                        setTimeout(function () {
+                            reconnectBicycle(bicycleNumber);
+                        }, 5000);
+                    }
+                } else {
+                    deviceTwo.startConnection(bicycleNumber);
+                    if (!deviceTwo.isConnected()) {
+                        setTimeout(function () {
+                            reconnectBicycle(bicycleNumber);
+                        }, 5000);
+                    }
+                }
+            }
+
+            async function disconnectBicycle(bicycleNumber) {
+                if (bicycleNumber == 1) {
+                    await deviceOne.disconnectDevice();
+                } else {
+                    await deviceTwo.disconnectDevice();
+                }
+            }
+
+            function testChange(event, bicycleNumber) {
+                power = event.target.value.getUint8(2, true);
+
+                if (bicycleNumber == 1) {
+                    bike1pwr += power;
+                } else {
+                    bike2pwr += power;
+                }
+            }
+
+            // =========================================================================================================
+
             const params = new Proxy(new URLSearchParams(window.location.search), {
                 get: (searchParams, prop) => searchParams.get(prop),
             });
@@ -134,176 +253,99 @@
                 }
                 subheading.innerHTML = "Cycle to generate electricity";
 
-                var progressCircle = document.createElement("div");
-                progressCircle.id = "progress-circle";
-                var angle = 0;
-                progressCircle.style.background =
-                    "radial-gradient(" + background_color + " 50%, transparent 51%), conic-gradient(black 0deg " + angle + "deg, " + secondary_color + " " + (angle + 1) + "deg 360deg)";
-
-                var progressText = document.createElement("div");
-                progressText.id = "progress-text";
-
-                var progressPercentage = document.createElement("p");
-                progressPercentage.innerHTML = 0 + "%";
-                progressPercentage.id = "progress-percentage";
-                progressText.appendChild(progressPercentage);
-
-                var percentageDescriptor = document.createElement("p");
-                percentageDescriptor.innerHTML = "of power generated";
-                progressText.appendChild(percentageDescriptor);
-
-                document.getElementById("middle").appendChild(progressCircle);
-                document.getElementById("middle").appendChild(progressText);
-
-                var timer_paused = false;
-                var timerLabel = document.createElement("p");
-                timerLabel.innerHTML = "TIME REMAINING";
-                timerLabel.id = "timer-label";
-
-                var timer = document.createElement("p");
-                timer.innerHTML = "";
-                timer.id = "timer";
-
-                var pauseButton = document.createElement("button");
-                pauseButton.innerHTML = "PAUSE";
-                pauseButton.id = "button";
-                pauseButton.onclick = function () {
-                    if (!timer_paused) {
-                        timer_paused = true;
-                        document.getElementById("button").innerHTML = "RESUME";
-                    } else {
-                        timer_paused = false;
-                        document.getElementById("button").innerHTML = "PAUSE";
-                    }
-                };
-
-                document.getElementById("right").appendChild(timerLabel);
-                document.getElementById("right").appendChild(timer);
-                document.getElementById("right").appendChild(pauseButton);
-
-                
-                // Challenge screen setup done
-
-                /* =========================================================================================================
-                Portions of the following code have been adapted from the following software released under the MIT license:
-                Project: PedalPower https://github.com/Tankiolegend/PedalPower
-                */
-
-                var bike1pwr = 0;
-                var bike2pwr = 0;
-
-                class Bicycle {
-                    device;
-
-                    async connectBicycle(bicycleNumber) {
-                        await navigator.bluetooth
-                            .requestDevice({
-                                // acceptAllDevices: true
-                                filters: [
-                                    {
-                                        services: ["00001818-0000-1000-8000-00805f9b34fb"],
-                                    },
-                                ],
-                            })
-                            .then((device) => {
-                                this.device = device;
-                                this.device.addEventListener("gattserverd", function () {
-                                    setTimeout(function () {
-                                        reconnectBicycle(bicycleNumber);
-                                    }, 2000);
-                                });
-
-                                this.startConnection(bicycleNumber);
-                            });
-                    }
-
-                    async startConnection(bicycleNumber) {
-                        await this.device.gatt
-                            .connect()
-                            .then((reserver) => {
-                                return reserver.getPrimaryService("00001818-0000-1000-8000-00805f9b34fb");
-                            })
-                            .then((service) => {
-                                return service.getCharacteristic("00002a63-0000-1000-8000-00805f9b34fb");
-                            })
-                            .then((characteristic) => characteristic.startNotifications())
-
-                            .then((characteristic) => {
-                                characteristic.addEventListener("characteristicvaluechanged", function () {
-                                    testChange(event, bicycleNumber);
-                                });
-                                beginTimer();
-                            })
-                            .catch((error) => {
-                                console.error(error);
-                            });
-                    }
-
-                    async disconnectDevice() {
-                        await this.device.gatt.disconnect();
-                    }
-
-                    isConnected() {
-                        if (typeof this.device === "undefined") {
-                            return false;
-                        } else {
-                            return this.device.gatt.connected;
-                        }
-                    }
-                }
-
-                const deviceOne = new Bicycle();
-                const deviceTwo = new Bicycle();
-
-                async function connectBicycle(bicycleNumber) {
-                    if (bicycleNumber == 1) {
-                        await deviceOne.connectBicycle(bicycleNumber);
-                    } else {
-                        await deviceTwo.connectBicycle(bicycleNumber);
-                    }
-                }
-
-                async function reconnectBicycle(bicycleNumber) {
-                    if (bicycleNumber == 1) {
-                        await deviceOne.startConnection(bicycleNumber);
-                        if (!deviceOne.isConnected()) {
-                            setTimeout(function () {
-                                reconnectBicycle(bicycleNumber);
-                            }, 5000);
-                        }
-                    } else {
-                        deviceTwo.startConnection(bicycleNumber);
-                        if (!deviceTwo.isConnected()) {
-                            setTimeout(function () {
-                                reconnectBicycle(bicycleNumber);
-                            }, 5000);
-                        }
-                    }
-                }
-
-                async function disconnectBicycle(bicycleNumber) {
-                    if (bicycleNumber == 1) {
-                        await deviceOne.disconnectDevice();
-                    } else {
-                        await deviceTwo.disconnectDevice();
-                    }
-                }
-
-                function testChange(event, bicycleNumber) {
-                    power = event.target.value.getUint8(2, true);
-
-                    if (bicycleNumber == 1) {
-                        bike1pwr += power;
-                    } else {
-                        bike2pwr += power;
-                    }
-                }
-
-                // =========================================================================================================
+                // Loading...
 
                 connectBicycle(1);
 
-                const progress_circle = document.querySelector("#progress-circle");
+                if (!bicycleConnected) {
+                    document.querySelector(".left").style.opacity = "0%";
+                    var loading = document.createElement("h1");
+                    loading.innerHTML = "Loading";
+                    loading.id = "loading";
+                    document.getElementById("middle").appendChild(loading);
+                    var dotsNumber = 0;
+                    var dots = setInterval(function () {
+                        if (dotsNumber === 3) {
+                            dotsNumber = 0;
+                            loading.innerHTML = "Loading";
+                        } else {
+                            loading.innerHTML += ".";
+                            dotsNumber++;
+                        }
+                    }, 1500);
+                } else {
+                    document.querySelector("#loading").remove();
+
+                    // Countdown
+                    var countdownNumber = document.createElement("h1");
+                    countdownNumber.id = "countdown";
+                    document.getElementById("middle").appendChild(countdownNumber);
+                    var number = 3;
+                    var countdown = setInterval(function () {
+                        if (number < 1) {
+                            clearInterval(countdown);
+                            countdownNumber.innerHTML = "GO!";
+                        } else {
+                            countdownNumber.innerHTML = number;
+                            number--;
+                        }
+                    }, 1000);
+
+                    document.querySelector("#countdown").remove();
+
+                    document.querySelector(".left").style.opacity = "100%";
+
+                    var progressCircle = document.createElement("div");
+                    progressCircle.id = "progress-circle";
+                    var angle = 0;
+                    progressCircle.style.background =
+                        "radial-gradient(" + background_color + " 50%, transparent 51%), conic-gradient(black 0deg " + angle + "deg, " + secondary_color + " " + (angle + 1) + "deg 360deg)";
+
+                    var progressText = document.createElement("div");
+                    progressText.id = "progress-text";
+
+                    var progressPercentage = document.createElement("p");
+                    progressPercentage.innerHTML = 0 + "%";
+                    progressPercentage.id = "progress-percentage";
+                    progressText.appendChild(progressPercentage);
+
+                    var percentageDescriptor = document.createElement("p");
+                    percentageDescriptor.innerHTML = "of power generated";
+                    progressText.appendChild(percentageDescriptor);
+
+                    document.getElementById("middle").appendChild(progressCircle);
+                    document.getElementById("middle").appendChild(progressText);
+
+                    var timer_paused = false;
+                    var timerLabel = document.createElement("p");
+                    timerLabel.innerHTML = "TIME REMAINING";
+                    timerLabel.id = "timer-label";
+
+                    var timer = document.createElement("p");
+                    timer.innerHTML = "";
+                    timer.id = "timer";
+
+                    var pauseButton = document.createElement("button");
+                    pauseButton.innerHTML = "PAUSE";
+                    pauseButton.id = "button";
+                    pauseButton.onclick = function () {
+                        if (!timer_paused) {
+                            timer_paused = true;
+                            document.getElementById("button").innerHTML = "RESUME";
+                        } else {
+                            timer_paused = false;
+                            document.getElementById("button").innerHTML = "PAUSE";
+                        }
+                    };
+
+                    document.getElementById("right").appendChild(timerLabel);
+                    document.getElementById("right").appendChild(timer);
+                    document.getElementById("right").appendChild(pauseButton);
+
+                    // Challenge screen setup done
+
+                    beginTimer();
+                }
 
                 function beginTimer() {
                     if (duration === "No timer") {
@@ -328,6 +370,7 @@
                                     seconds = "0" + seconds;
                                 }
 
+                                // Time still remaining
                                 if (distance > 0) {
                                     document.getElementById("timer").innerHTML = minutes + ":" + seconds;
 
@@ -335,7 +378,7 @@
                                     if (bike1pwr > 0 && Math.round(bike1pwr / 100) <= 100) {
                                         var percentage = Math.round(bike1pwr / 100);
                                         angle = percentage * 0.01 * 360;
-                                        progress_circle.style.background =
+                                        document.querySelector("#progress-circle").style.background =
                                             "radial-gradient(" +
                                             background_color +
                                             " 50%, transparent 51%), conic-gradient(black 0deg " +
