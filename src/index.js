@@ -20,7 +20,7 @@ const createWindow = () => {
     // mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
     // Open the DevTools.
-    // mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 
     // const win = new BrowserWindow({ width: 800, height: 600 })
     // win.loadFile(path.join(__dirname, 'index.html'));

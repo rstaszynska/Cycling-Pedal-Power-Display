@@ -390,19 +390,19 @@ body {
 }
 
 
-.left {
+.inner-left {
     width: 45%;
     height: 100%;
     text-align: center;
     position: fixed;
 }
 
-.left img {
+.inner-left img {
     margin-top: 50%;
     height: 70vh;
 }
 
-.right {
+.inner-right {
     margin-top: 5%;
     width: 65%;
     height: 90%;
@@ -411,12 +411,12 @@ body {
     position: fixed;
 }
 
-.right h1 {
+.inner-right h1 {
     font-weight: 700;
     font-size: 70px;
 }
 
-.right h2 {
+.inner-right h2 {
     width: 60%;
     margin-left: 20%;
     margin-top: 5%;

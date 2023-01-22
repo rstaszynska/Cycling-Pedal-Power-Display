@@ -48,19 +48,7 @@
 
         <script>
             function navigate(appliance) {
-                if (appliance === "led") {
-                    location.href = "led.html";
-                } else if (appliance === "incandescent") {
-                    location.href = "incandescent.html";
-                } else if (appliance === "kettle") {
-                    location.href = "kettle.html";
-                } else if (appliance === "toaster") {
-                    location.href = "toaster.html";
-                } else if (appliance === "laptop") {
-                    location.href = "laptop.html";
-                } else if (appliance === "washingmachine") {
-                    location.href = "washingmachine.html";
-                }
+                location.href = "appliance_info.html?appliance=" + appliance;
             }
         </script>
     </body>
