@@ -301,7 +301,7 @@ body {
 }
 
 #image-right {
-    margin-top: -300px;
+    margin-top: -300px !important;
     margin-left: 50px;
 }
 
