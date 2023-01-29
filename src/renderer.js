@@ -115,7 +115,7 @@ async function disconnectBicycle(bicycleNumber) {
 }
 
 function testChange(event, bicycleNumber) {
-    power = event.target.value.getUint8()
+    power = event.target.value.getUint8(2, true);
     bicyclePower += power;
 }
 
@@ -158,8 +158,8 @@ if (appliance === "led" || appliance === "kettle" || appliance === "laptop") {
         name.innerHTML = "Laptop";
         name.style.marginTop = "10vh";
         wattage.innerHTML = "W";
-        appliance_img.style.height = "47.5%";
-        appliance_img.style.marginTop = "1vh";
+        appliance_img.style.height = "50%";
+        appliance_img.style.marginLeft= "10%";
     }
 } else {
     background_color = "#99ECF8";
@@ -172,8 +172,7 @@ if (appliance === "led" || appliance === "kettle" || appliance === "laptop") {
         name.innerHTML = "Toaster";
         name.style.marginTop = "10vh";
         wattage.innerHTML = "W";
-        appliance_img.style.height = "40%";
-        appliance_img.style.marginTop = "1vh";
+        appliance_img.style.height = "45%";
     } else if (appliance === "washingmachine") {
         name.innerHTML = "Washing Machine";
         wattage.innerHTML = "W";

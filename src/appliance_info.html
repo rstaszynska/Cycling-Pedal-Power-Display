@@ -77,19 +77,17 @@
 
                 } else if (appliance === "laptop") {
                     name.innerHTML = "Laptop";
-                    name.style.marginTop = "10vh";
                     wattage.innerHTML = "Wattage: <b>W</b>";
                     usage.innerHTML = "Average monthly household usage: <b>kWh</b>";
                     cost.innerHTML = "Average monthly cost: <b>£</b>";
                     emissions.innerHTML = "Average monthly CO₂e emissions: <b>kg</b>";
                     question.innerHTML = "Do you think you can power on a Laptop?"
-                    appliance_img.style.height = "47.5%";
-                    appliance_img.style.marginTop = "1vh";
+                    appliance_img.style.height = "60%";
+                    appliance_img.style.marginTop = "30%";
                 }
             }
            
             else {
-                
                 document.querySelector(".appliance-info").classList.add("lightblue");
                 const name = document.querySelector("#appliance-name");
                 const wattage = document.querySelector("#appliance-wattage");
@@ -108,14 +106,13 @@
 
                 } else if (appliance === "toaster") {
                     name.innerHTML = "Toaster";
-                    name.style.marginTop = "10vh";
                     wattage.innerHTML = "Wattage: <b>W</b>";
                     usage.innerHTML = "Average monthly household usage: <b>kWh</b>";
                     cost.innerHTML = "Average monthly cost: <b>£</b>";
                     emissions.innerHTML = "Average monthly CO₂e emissions: <b>kg</b>";
                     question.innerHTML = "Do you think you can power on a Toaster?"
-                    appliance_img.style.height = "40%";
-                    appliance_img.style.marginTop = "1vh";
+                    appliance_img.style.height = "60%";
+                    appliance_img.style.marginTop = "30%";
 
                 } else if (appliance === "washingmachine") {
                     name.innerHTML = "Washing Machine";
