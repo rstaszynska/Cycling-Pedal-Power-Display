@@ -39,10 +39,8 @@ const createWindow = () => {
         mainWindow.webContents.send("bluetooth-pairing-request", details);
     });
 
-    // and load the index.html of the app.
+    // and load the main html of the app.
     mainWindow.loadFile(path.join(__dirname, "../templates/display_selection.html"));
-
-
 
 
     const win = new BrowserWindow({
@@ -89,7 +87,6 @@ const createWindow = () => {
         rightBicyclePower = data[0];
         events.sender.send("updated-left-bicycle-stats", [leftBicyclePower]);
     })
-
 
 
 };

@@ -26,15 +26,6 @@
                 
             </div>
         </div>
-        <script>
-            const params = new Proxy(new URLSearchParams(window.location.search), {
-                get: (searchParams, prop) => searchParams.get(prop),
-            });
-            let display = params.display;
-
-            function next() {
-                location.href = "index.html?display=" + display;
-            }
-        </script>
+        <script src="../javascript/welcome_screen.js"></script>
     </body>
 </html>

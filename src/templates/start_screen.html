@@ -13,8 +13,8 @@
                     <h2 id="subheading"></h2>
                 </div>
 
-                <img id="back-arrow" src="../images/back.png" onclick="go_back()" />
-                <button id="home-button" onclick="go_to_home()">Selection Screen</button>
+                <img id="back-arrow" src="../images/back.png" />
+                <button id="home-button">Selection Screen</button>
 
                 <div class="challenge-screen box-styling">
                     <div class="left">
@@ -39,16 +39,6 @@
                 </div>
             </div>
         </div>
-
         <script src="../javascript/renderer.js"></script>
-        <script>
-            function go_back() {
-                location.href = "timer_duration_selection.html?appliance=" + appliance + "&mode=" + mode;
-            }
-
-            function go_to_home() {
-                location.href = "index.html";
-            }
-        </script>
     </body>
 </html>

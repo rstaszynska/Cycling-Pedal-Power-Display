@@ -432,3 +432,13 @@ function start() {
             }, 1000);
         }
     }
+
+    document.querySelector("#back-arrow").onclick = function() {go_back()};
+    function go_back() {
+        location.href = "timer_duration_selection.html?appliance=" + appliance + "&mode=" + mode;
+    }
+
+    document.querySelector("#home-button").onclick = function() {go_to_home()};
+    function go_to_home() {
+        location.href = "appliance_selection.html";
+    }
