@@ -279,13 +279,11 @@ function start() {
         document.getElementById("middle").appendChild(progressText);
 
         var timerLabel = document.createElement("p");
-        timerLabel.innerHTML = "TIME REMAINING";
         timerLabel.id = "timer-label";
 
         var timer = document.createElement("p");
         timer.innerHTML = "";
         timer.id = "timer";
-
 
         var pauseButton = document.createElement("button");
         pauseButton.style.marginTop = "30px";
@@ -322,19 +320,111 @@ function start() {
         document.getElementById("right").appendChild(pauseButton);
 
         // Challenge screen setup done
-
         beginTimer();
     }
 
     var opponentScore = 0;
 
-    var testValue = 0;
-    var testValue2 = 10000;
-
     function beginTimer() {
         if (duration === "No timer") {
-            document.getElementById("timer").innerHTML = "No timer";
+            document.querySelector("#timer-label").innerHTML = "TIME ELAPSED";
+
+            // Elapsed time
+            var minutesElapsed = 0;
+            var secondsElapsed = 0;
+            var minutes = "";
+            var seconds = "";
+
+            var x = setInterval(function () {
+                if (!timer_paused) {
+                    minutes = minutesElapsed;
+
+                    if (secondsElapsed < 9) {
+                        seconds = "0" + secondsElapsed;
+                    }
+                    else {
+                        seconds = secondsElapsed;
+                    }
+                
+                    document.getElementById("timer").innerHTML = minutes + ":" + seconds;
+                    
+                    if (seconds === 59) {
+                        secondsElapsed = 0;
+                        minutesElapsed += 1;
+                    }
+                    else {
+                        secondsElapsed += 1;
+                    }
+
+                    // Goal not yet reached 
+                    if (bicyclePower >= 0 && Math.round(bicyclePower *10 / 100) <= 100) {
+                        var percentage = Math.round(bicyclePower *10 / 100);
+                        angle = percentage * 0.01 * 360;
+                        document.querySelector("#progress-circle").style.background =
+                            "radial-gradient(" +
+                            background_color +
+                            " 50%, transparent 51%), conic-gradient(black 0deg " +
+                            angle +
+                            "deg, " +
+                            secondary_color +
+                            " " +
+                            (angle + 1) +
+                            "deg 360deg)";
+                        document.querySelector("#progress-percentage").innerHTML = Math.round(percentage) + "%";
+
+
+                        // Functionality for DUO MODE
+                        // Time remaining, and the current user has not won yet
+                        if (mode === "Competition Mode" || mode === "Cooperation Mode") {
+                            // Get information about the other bicycle
+                            if (display === "left") {
+                                ipcRenderer.send("get-right-bicycle-power", [Math.round(bicyclePower)]);
+                                ipcRenderer.on("updated-right-bicycle-stats", (event, data) => {
+                                    opponentScore = data[0];
+                                    document.querySelector("#score-percentage").innerHTML = opponentScore + "%";
+                                })
+                            }
+                            else {
+                                ipcRenderer.send("get-left-bicycle-power", [Math.round(bicyclePower)]);
+                                ipcRenderer.on("updated-left-bicycle-stats", (event, data) => {
+                                    opponentScore = data[0];
+                                    document.querySelector("#score-percentage").innerHTML = opponentScore + "%";
+                                })
+                            }
+
+                            // // Cooperation mode, should display a common goal
+                            // if (mode === "Cooperation Mode") {
+
+                            // }
+
+                            // // Competition mode, should display opponent score next to it
+                            // else {
+
+                            // }
+                        }
+                    }
+
+                    // Goal reached
+                    else {
+                        // timer_paused = true;
+                        document.querySelector("#button").remove();
+                        clearInterval(x);
+                        document.querySelector("#progress-percentage").innerHTML = "100%";
+
+                        // Disconnect bicycle
+                        if (display === "left") {
+                            disconnectBicycle(1);
+                        }
+                        else {
+                            disconnectBicycle(2);
+                        }
+                    }
+                }
+            }, 1000);
+
         } else {
+            document.querySelector("#timer-label").innerHTML = "TIME REMAINING";
+
             if (duration === "30 seconds") {
                 var time = new Date().getTime() + 32000;
             } else if (duration === "1 minute") {
