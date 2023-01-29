@@ -12,18 +12,14 @@ const createWindow = () => {
         width: 1250,
         height: 900,
         webPreferences: {
-            preload: path.join(__dirname, "preload.js"),
+            // preload: path.join(__dirname, "preload.js"),
+            nodeIntegration: true,
+            contextIsolation: false,
         },
     });
 
-    // // and load the index.html of the app.
-    // mainWindow.loadFile(path.join(__dirname, 'index.html'));
-
     // Open the DevTools.
     mainWindow.webContents.openDevTools();
-
-    // const win = new BrowserWindow({ width: 800, height: 600 })
-    // win.loadFile(path.join(__dirname, 'index.html'));
 
     mainWindow.webContents.on("select-bluetooth-device", (event, deviceList, callback) => {
         event.preventDefault();
@@ -45,6 +41,57 @@ const createWindow = () => {
 
     // and load the index.html of the app.
     mainWindow.loadFile(path.join(__dirname, "display_selection.html"));
+
+
+
+
+    const win = new BrowserWindow({
+        width: 1250,
+        height: 900,
+        webPreferences: {
+            // preload: path.join(__dirname, "preload.js"),
+            nodeIntegration: true,
+            contextIsolation: false,
+        },
+    });
+    win.webContents.openDevTools();
+    win.loadFile(path.join(__dirname, 'display_selection.html'));
+    
+
+    win.webContents.on("select-bluetooth-device", (event, deviceList, callback) => {
+        event.preventDefault();
+        if (deviceList && deviceList.length > 0) {
+            callback(deviceList[0].deviceId);
+        }
+    });
+
+    // Listen for a message from the renderer to get the response for the Bluetooth pairing.
+    ipcMain.on("bluetooth-pairing-response", (event, response) => {
+        bluetoothPinCallback(response);
+    });
+
+    win.webContents.session.setBluetoothPairingHandler((details, callback) => {
+        bluetoothPinCallback = callback;
+        // Send a message to the renderer to prompt the user to confirm the pairing.
+        win.webContents.send("bluetooth-pairing-request", details);
+    });
+
+
+    let rightBicyclePower = 0;
+    let leftBicyclePower = 0;
+
+    ipcMain.on("get-right-bicycle-power", (events, data) => {
+        leftBicyclePower = data[0];
+        events.sender.send("updated-right-bicycle-stats", [rightBicyclePower]);
+    })
+
+    ipcMain.on("get-left-bicycle-power", (events, data) => {
+        rightBicyclePower = data[0];
+        events.sender.send("updated-left-bicycle-stats", [leftBicyclePower]);
+    })
+
+
+
 };
 
 // This method will be called when Electron has finished

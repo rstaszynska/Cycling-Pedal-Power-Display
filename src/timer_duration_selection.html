@@ -39,7 +39,7 @@
             });
             let appliance = params.appliance;
             let mode = params.mode;
-            console.log(mode);
+            let display = params.display;
 
             function go_back() {
                 if (mode === "solo") {
@@ -54,7 +54,7 @@
             }
 
             function select(duration) {
-                location.href = "start_screen.html?appliance=" + appliance + "&mode=" + mode + "&duration=" + duration;
+                location.href = "start_screen.html?appliance=" + appliance + "&mode=" + mode + "&duration=" + duration + "&display=" + display;
             }
         </script>
     </body>

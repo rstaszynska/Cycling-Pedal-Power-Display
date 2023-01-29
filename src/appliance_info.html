@@ -44,6 +44,7 @@
                 get: (searchParams, prop) => searchParams.get(prop),
             });
             let appliance = params.appliance;
+            let display = params.display;
 
             const appliance_img = document.querySelector("#appliance-img");
             appliance_img.src = "images/" + appliance + ".png";
@@ -131,7 +132,7 @@
             }
 
             function select() {
-                location.href = "mode_selection.html?appliance=" + appliance;
+                location.href = "mode_selection.html?appliance=" + appliance + "&display=" + display;
             }
         </script>
     </body>
