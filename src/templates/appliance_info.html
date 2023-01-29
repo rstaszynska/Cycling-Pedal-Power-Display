@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <title>Cycling Pedal Power Display</title>
-        <link rel="stylesheet" href="index.css" />
+        <link rel="stylesheet" href="../css/index.css" />
     </head>
     <body>
         <div class="outer-container">
@@ -13,7 +13,7 @@
                     <h2>Select an appliance to get started</h2>
                 </div>
 
-                <img id="back-arrow" src="images/back.png" onclick="go_back()" />
+                <img id="back-arrow" src="../images/back.png" onclick="go_back()" />
 
                 <div class="appliance-info">
                     <div class="appliance-image">
@@ -47,7 +47,7 @@
             let display = params.display;
 
             const appliance_img = document.querySelector("#appliance-img");
-            appliance_img.src = "images/" + appliance + ".png";
+            appliance_img.src = "../images/" + appliance + ".png";
         
 
 

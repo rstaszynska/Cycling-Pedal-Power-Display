@@ -312,12 +312,12 @@ body {
 
 @font-face {
     font-family: K2DBold;
-    src: url("fonts/K2D/K2D-Bold.ttf");
+    src: url("../fonts/K2D/K2D-Bold.ttf");
 }
 
 @font-face {
     font-family: K2DLight;
-    src: url("fonts/K2D/K2D-Light.ttf");
+    src: url("../fonts/K2D/K2D-Light.ttf");
 }
 
 #timer-label, #score-text {

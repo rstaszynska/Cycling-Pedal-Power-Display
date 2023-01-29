@@ -40,7 +40,7 @@ const createWindow = () => {
     });
 
     // and load the index.html of the app.
-    mainWindow.loadFile(path.join(__dirname, "display_selection.html"));
+    mainWindow.loadFile(path.join(__dirname, "../templates/display_selection.html"));
 
 
 
@@ -55,7 +55,7 @@ const createWindow = () => {
         },
     });
     win.webContents.openDevTools();
-    win.loadFile(path.join(__dirname, 'display_selection.html'));
+    win.loadFile(path.join(__dirname, '../templates/display_selection.html'));
     
 
     win.webContents.on("select-bluetooth-device", (event, deviceList, callback) => {

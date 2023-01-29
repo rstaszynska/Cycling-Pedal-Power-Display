@@ -137,7 +137,7 @@ const box_styling = document.querySelector(".box-styling");
 box_styling.style.border = "10px solid #4D9FFF";
 
 const appliance_img = document.querySelector("#chosen-appliance-img");
-appliance_img.src = "images/" + appliance + ".png";
+appliance_img.src = "../images/" + appliance + ".png";
 const name = document.querySelector("#appliance-name");
 const wattage = document.querySelector("#appliance-wattage");
 
@@ -192,7 +192,7 @@ if (mode === "Solo Mode") {
     image_to_hide.style.display = "none";
 
     const image_to_show = document.querySelector("#image-left");
-    image_to_show.src = "images/girl-on-bicycle.png";
+    image_to_show.src = "../images/girl-on-bicycle.png";
     image_to_show.style.marginRight = "0px";
 }
 

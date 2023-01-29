@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <title>Cycling Pedal Power Display</title>
-        <link rel="stylesheet" href="index.css" />
+        <link rel="stylesheet" href="../css/index.css" />
     </head>
     <body>
         <div class="outer-container">
@@ -13,7 +13,7 @@
                     <h2 id="subheading"></h2>
                 </div>
 
-                <img id="back-arrow" src="images/back.png" onclick="go_back()" />
+                <img id="back-arrow" src="../images/back.png" onclick="go_back()" />
                 <button id="home-button" onclick="go_to_home()">Selection Screen</button>
 
                 <div class="challenge-screen box-styling">
@@ -32,15 +32,15 @@
                     <div id="right">
                         <p class="start-screen-element">You have chosen:</p>
                         <h2 id="mode" class="start-screen-element"></h2>
-                        <img id="image-left" class="start-screen-element" src="images/boy-on-bicycle.png" />
-                        <img id="image-right" class="start-screen-element" src="images/girl-on-bicycle-white.png" />
+                        <img id="image-left" class="start-screen-element" src="../images/boy-on-bicycle.png" />
+                        <img id="image-right" class="start-screen-element" src="../images/girl-on-bicycle-white.png" />
                         <h3 id="duration" class="start-screen-element"></h3>
                     </div>
                 </div>
             </div>
         </div>
 
-        <script src="./renderer.js"></script>
+        <script src="../javascript/renderer.js"></script>
         <script>
             function go_back() {
                 location.href = "timer_duration_selection.html?appliance=" + appliance + "&mode=" + mode;
