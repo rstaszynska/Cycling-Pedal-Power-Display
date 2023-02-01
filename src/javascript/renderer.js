@@ -6,17 +6,16 @@ const {ipcRenderer} = require("electron");
 */
 
 var bicyclePower = 0;
-var bicycleConnected = false;
 
 class Bicycle {
     device;
 
-    async connectBicycle(bicycleNumber) {
+    async connectBicycle(bicycleName) {
         await navigator.bluetooth
             .requestDevice({
-                // acceptAllDevices: true
                 filters: [
                     {
+                        name: [bicycleName],
                         services: ["00001818-0000-1000-8000-00805f9b34fb"],
                     },
                 ],
@@ -25,16 +24,15 @@ class Bicycle {
                 this.device = device;
                 this.device.addEventListener("gattserverd", function () {
                     setTimeout(function () {
-                        reconnectBicycle(bicycleNumber);
+                        reconnectBicycle(bicycleName);
                     }, 2000);
                 });
 
-                this.startConnection(bicycleNumber);
-                bicycleConnected = true;
+                this.startConnection(bicycleName);
             });
     }
 
-    async startConnection(bicycleNumber) {
+    async startConnection(bicycleName) {
         this.device.gatt.connect();
         await this.device.gatt
             .connect()
@@ -48,7 +46,7 @@ class Bicycle {
 
             .then((characteristic) => {
                 characteristic.addEventListener("characteristicvaluechanged", function () {
-                    testChange(event, bicycleNumber);
+                    testChange(event, bicycleName);
                 });
             })
             .catch((error) => {
@@ -80,27 +78,31 @@ const deviceTwo = new Bicycle();
 
 async function connectBicycle(bicycleNumber) {
     if (bicycleNumber == 1) {
-        await deviceOne.connectBicycle(bicycleNumber);
+        await deviceOne.connectBicycle("Tacx Flux 27168");
         console.log("connected bike 1");
+        console.log(deviceOne.device.name + "\n");
+        // Tacx Flux 27168
     } else {
-        await deviceTwo.connectBicycle(bicycleNumber);
+        await deviceTwo.connectBicycle("Tacx Flux 27280");
         console.log("connected bike 2");
+        console.log(deviceTwo.device.name + "\n\n");
+        // Tacx Flux 27280
     }
 }
 
 async function reconnectBicycle(bicycleNumber) {
     if (bicycleNumber == 1) {
-        await deviceOne.startConnection(bicycleNumber);
+        await deviceOne.startConnection("Tacx Flux 27168");
         if (!deviceOne.isConnected()) {
             setTimeout(function () {
-                reconnectBicycle(bicycleNumber);
+                reconnectBicycle("Tacx Flux 27168");
             }, 5000);
         }
     } else {
-        deviceTwo.startConnection(bicycleNumber);
+        deviceTwo.startConnection("Tacx Flux 27280");
         if (!deviceTwo.isConnected()) {
             setTimeout(function () {
-                reconnectBicycle(bicycleNumber);
+                reconnectBicycle("Tacx Flux 27280");
             }, 5000);
         }
     }
@@ -114,7 +116,7 @@ async function disconnectBicycle(bicycleNumber) {
     }
 }
 
-function testChange(event, bicycleNumber) {
+function testChange(event) {
     power = event.target.value.getUint8(2, true);
     bicyclePower += power;
 }
@@ -214,7 +216,7 @@ function start() {
     if (display === "left") {
         connectBicycle(1);
     }
-    else if (display === "left") {
+    else if (display === "right") {
         connectBicycle(2);
     }
 
@@ -320,7 +322,16 @@ function start() {
         document.getElementById("right").appendChild(pauseButton);
 
         // Challenge screen setup done
+
         beginTimer();
+
+        // Start timer if the bicycle is connected
+        // var y = setInterval(function () {
+        //     if (bicycleConnected) {
+        //         beginTimer();
+        //         clearInterval(y)
+        //     }
+        // }, 1000);
     }
 
     var opponentScore = 0;
@@ -410,6 +421,9 @@ function start() {
                         document.querySelector("#button").remove();
                         clearInterval(x);
                         document.querySelector("#progress-percentage").innerHTML = "100%";
+                 
+                        // Make the circle 100% black   
+                        
 
                         // Disconnect bicycle
                         if (display === "left") {
@@ -473,14 +487,16 @@ function start() {
                                     ipcRenderer.send("get-right-bicycle-power", [Math.round(bicyclePower)]);
                                     ipcRenderer.on("updated-right-bicycle-stats", (event, data) => {
                                         opponentScore = data[0];
-                                        document.querySelector("#score-percentage").innerHTML = opponentScore + "%";
+                                        console.log(data[0]);
+                                        console.log(data[1]);
+                                        document.querySelector("#score-percentage").innerHTML = Math.round(opponentScore*10 / 100) + "%";
                                     })
                                 }
                                 else {
                                     ipcRenderer.send("get-left-bicycle-power", [Math.round(bicyclePower)]);
                                     ipcRenderer.on("updated-left-bicycle-stats", (event, data) => {
                                         opponentScore = data[0];
-                                        document.querySelector("#score-percentage").innerHTML = opponentScore + "%";
+                                        document.querySelector("#score-percentage").innerHTML = Math.round(opponentScore*10 / 100) + "%";
                                     })
                                 }
 
