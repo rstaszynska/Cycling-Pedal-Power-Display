@@ -80,12 +80,10 @@ async function connectBicycle(bicycleNumber) {
     if (bicycleNumber == 1) {
         await deviceOne.connectBicycle("Tacx Flux 27168");
         console.log("connected bike 1");
-        console.log(deviceOne.device.name + "\n");
         // Tacx Flux 27168
     } else {
         await deviceTwo.connectBicycle("Tacx Flux 27280");
         console.log("connected bike 2");
-        console.log(deviceTwo.device.name + "\n\n");
         // Tacx Flux 27280
     }
 }
@@ -123,6 +121,12 @@ function testChange(event) {
 
 // =========================================================================================================
 
+var userWon = false;
+var opponentWon = false;
+var goalReached = false;
+var commonGoalReached = false;
+var timesUp = false;
+
 const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
 });
@@ -131,79 +135,192 @@ let mode = params.mode;
 let duration = params.duration;
 let display = params.display;
 
-const timer = document.querySelector("#duration");
-timer.innerHTML = duration;
-const mode_type = document.querySelector("#mode");
-mode_type.innerHTML = mode;
-const box_styling = document.querySelector(".box-styling");
-box_styling.style.border = "10px solid #4D9FFF";
 
-const appliance_img = document.querySelector("#chosen-appliance-img");
-appliance_img.src = "../images/" + appliance + ".png";
-const name = document.querySelector("#appliance-name");
-const wattage = document.querySelector("#appliance-wattage");
+var timer_paused = false;
+
+setup_start_screen();
+document.querySelector(".start").onclick = function() {start()};
+
+function start() {
+    // Setup challenge screen
+    setup_challenge_screen();
+
+    // Begin the challenge
+    beginTimer();
+
+    // Start timer if the bicycle is connected
+    // var y = setInterval(function () {
+    //     if (bicycleConnected) {
+    //         beginTimer();
+    //         clearInterval(y)
+    //     }
+    // }, 1000);
+}
+
+var opponentScore = 0;
+
+function beginTimer() {
+
+    // No timer duration selected -> count elapsed time instead
+    if (duration === "No timer") {
+        document.querySelector("#timer-label").innerHTML = "TIME ELAPSED";
+
+        // Elapsed time
+        var minutesElapsed = 0;
+        var secondsElapsed = 0;
+        var minutes = "";
+        var seconds = "";
+
+        var x = setInterval(function () {
+            if (!timer_paused) {
+                minutes = minutesElapsed;
+
+                if (secondsElapsed < 9) {
+                    seconds = "0" + secondsElapsed;
+                }
+                else {
+                    seconds = secondsElapsed;
+                }
+            
+                document.getElementById("timer").innerHTML = minutes + ":" + seconds;
+                
+                if (seconds === 59) {
+                    secondsElapsed = 0;
+                    minutesElapsed += 1;
+                }
+                else {
+                    secondsElapsed += 1;
+                }
+
+                // Challenge ends when user reaches the goal or pauses/exits the game
+                begin_challenge();
+            }
+        }, 1000);
+    } 
+
+    // Timer duration selected -> countdown present
+    else {
+        document.querySelector("#timer-label").innerHTML = "TIME REMAINING";
+
+        if (duration === "30 seconds") {
+            var time = new Date().getTime() + 32000;
+        } else if (duration === "1 minute") {
+            var time = new Date().getTime() + 62000;
+        } else if (duration === "3 minutes") {
+            var time = new Date().getTime() + 182000;
+        }
+
+        var x = setInterval(function () {
+            if (!timer_paused) {
+                var distance = time - new Date().getTime();
+
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                if (seconds < 10) {
+                    seconds = "0" + seconds;
+                }
+
+                // Time still remaining
+                if (distance > 0) {
+                    document.getElementById("timer").innerHTML = minutes + ":" + seconds;
+
+                    begin_challenge();    
+                }
+
+                // Time's up
+                else {
+                    clearInterval(x);
+                    timesUp = true;
+                    show_results(); // Goal not reached
+                }
+            } else {
+                time += 1000;
+            }
+        }, 1000);
+    }
+}
+
+document.querySelector("#back-arrow").onclick = function() {go_back()};
+function go_back() {
+    location.href = "timer_duration_selection.html?appliance=" + appliance + "&mode=" + mode;
+}
+
+document.querySelector("#home-button").onclick = function() {go_to_home()};
+function go_to_home() {
+    location.href = "appliance_selection.html";
+}
 
 var background_color;
 var secondary_color;
 
-if (appliance === "led" || appliance === "kettle" || appliance === "laptop") {
-    background_color = "#7CC0FF";
-    secondary_color = "#b5dbfc";
-
-    if (appliance === "led") {
-        name.innerHTML = "LED Light Bulb";
-        wattage.innerHTML = "W";
-    } else if (appliance === "kettle") {
-        name.innerHTML = "Electric Kettle";
-        wattage.innerHTML = "W";
-    } else if (appliance === "laptop") {
-        name.innerHTML = "Laptop";
-        name.style.marginTop = "10vh";
-        wattage.innerHTML = "W";
-        appliance_img.style.height = "50%";
-        appliance_img.style.marginLeft= "10%";
+function setup_start_screen() {
+    const timer = document.querySelector("#duration");
+    timer.innerHTML = duration;
+    const mode_type = document.querySelector("#mode");
+    mode_type.innerHTML = mode;
+    const box_styling = document.querySelector(".box-styling");
+    box_styling.style.border = "10px solid #4D9FFF";
+    
+    const appliance_img = document.querySelector("#chosen-appliance-img");
+    appliance_img.src = "../images/" + appliance + ".png";
+    const name = document.querySelector("#appliance-name");
+    const wattage = document.querySelector("#appliance-wattage");
+    
+    if (appliance === "led" || appliance === "kettle" || appliance === "laptop") {
+        background_color = "#7CC0FF";
+        secondary_color = "#b5dbfc";
+    
+        if (appliance === "led") {
+            name.innerHTML = "LED Light Bulb";
+            wattage.innerHTML = "W";
+        } else if (appliance === "kettle") {
+            name.innerHTML = "Electric Kettle";
+            wattage.innerHTML = "W";
+        } else if (appliance === "laptop") {
+            name.innerHTML = "Laptop";
+            name.style.marginTop = "10vh";
+            wattage.innerHTML = "W";
+            appliance_img.style.height = "50%";
+            appliance_img.style.marginLeft= "10%";
+        }
+    } else {
+        background_color = "#99ECF8";
+        secondary_color = "#baf3fc";
+    
+        if (appliance === "incandescent") {
+            name.innerHTML = "Incandescent Light Bulb";
+            wattage.innerHTML = "W";
+        } else if (appliance === "toaster") {
+            name.innerHTML = "Toaster";
+            name.style.marginTop = "10vh";
+            wattage.innerHTML = "W";
+            appliance_img.style.height = "45%";
+        } else if (appliance === "washingmachine") {
+            name.innerHTML = "Washing Machine";
+            wattage.innerHTML = "W";
+        }
     }
-} else {
-    background_color = "#99ECF8";
-    secondary_color = "#baf3fc";
-
-    if (appliance === "incandescent") {
-        name.innerHTML = "Incandescent Light Bulb";
-        wattage.innerHTML = "W";
-    } else if (appliance === "toaster") {
-        name.innerHTML = "Toaster";
-        name.style.marginTop = "10vh";
-        wattage.innerHTML = "W";
-        appliance_img.style.height = "45%";
-    } else if (appliance === "washingmachine") {
-        name.innerHTML = "Washing Machine";
-        wattage.innerHTML = "W";
-    }
+    
+    box_styling.style.backgroundColor = background_color;
+    
+    var heading = document.querySelector("#heading");
+    var subheading = document.querySelector("#subheading");
+    
+    heading.innerHTML = "Are you ready for the challenge?";
+    subheading.innerHTML = "Sit comfortably and select start when you are ready to begin";
+    
+    if (mode === "Solo Mode") {
+        const image_to_hide = document.querySelector("#image-right");
+        image_to_hide.style.display = "none";
+    
+        const image_to_show = document.querySelector("#image-left");
+        image_to_show.src = "../images/girl-on-bicycle.png";
+        image_to_show.style.marginRight = "0px";
+    }        
 }
 
-box_styling.style.backgroundColor = background_color;
-
-var heading = document.querySelector("#heading");
-var subheading = document.querySelector("#subheading");
-
-heading.innerHTML = "Are you ready for the challenge?";
-subheading.innerHTML = "Sit comfortably and select start when you are ready to begin";
-
-if (mode === "Solo Mode") {
-    const image_to_hide = document.querySelector("#image-right");
-    image_to_hide.style.display = "none";
-
-    const image_to_show = document.querySelector("#image-left");
-    image_to_show.src = "../images/girl-on-bicycle.png";
-    image_to_show.style.marginRight = "0px";
-}
-
-document.querySelector(".start").onclick = function() {start()};
-
-var timer_paused = false;
-
-
-function start() {
+function setup_challenge_screen() {
     document.querySelectorAll(".start-screen-element").forEach((element) => element.remove());
 
     if (appliance === "led" || appliance === "incandescent") {
@@ -255,296 +372,237 @@ function start() {
     //         }
     //     }, 1000);
 
-        // document.querySelector("#countdown").remove();
+    // document.querySelector("#countdown").remove();
 
-        document.querySelector(".left").style.opacity = "100%";
+    document.querySelector(".left").style.opacity = "100%";
 
-        var progressCircle = document.createElement("div");
-        progressCircle.id = "progress-circle";
-        var angle = 0;
-        progressCircle.style.background =
-            "radial-gradient(" + background_color + " 50%, transparent 51%), conic-gradient(black 0deg " + angle + "deg, " + secondary_color + " " + (angle + 1) + "deg 360deg)";
+    var progressCircle = document.createElement("div");
+    progressCircle.id = "progress-circle";
+    var angle = 0;
+    progressCircle.style.background =
+        "radial-gradient(" + background_color + " 50%, transparent 51%), conic-gradient(black 0deg " + angle + "deg, " + secondary_color + " " + (angle + 1) + "deg 360deg)";
 
-        var progressText = document.createElement("div");
-        progressText.id = "progress-text";
+    var progressText = document.createElement("div");
+    progressText.id = "progress-text";
 
-        var progressPercentage = document.createElement("p");
-        progressPercentage.innerHTML = 0 + "%";
-        progressPercentage.id = "progress-percentage";
-        progressText.appendChild(progressPercentage);
+    var progressPercentage = document.createElement("p");
+    progressPercentage.innerHTML = 0 + "%";
+    progressPercentage.id = "progress-percentage";
+    progressText.appendChild(progressPercentage);
 
-        var percentageDescriptor = document.createElement("p");
-        percentageDescriptor.innerHTML = "of power generated";
-        progressText.appendChild(percentageDescriptor);
+    var percentageDescriptor = document.createElement("p");
+    percentageDescriptor.innerHTML = "of power generated";
+    progressText.appendChild(percentageDescriptor);
 
-        document.getElementById("middle").appendChild(progressCircle);
-        document.getElementById("middle").appendChild(progressText);
+    document.getElementById("middle").appendChild(progressCircle);
+    document.getElementById("middle").appendChild(progressText);
 
-        var timerLabel = document.createElement("p");
-        timerLabel.id = "timer-label";
+    var timerLabel = document.createElement("p");
+    timerLabel.id = "timer-label";
 
-        var timer = document.createElement("p");
-        timer.innerHTML = "";
-        timer.id = "timer";
+    var timer = document.createElement("p");
+    timer.innerHTML = "";
+    timer.id = "timer";
 
-        var pauseButton = document.createElement("button");
-        pauseButton.style.marginTop = "30px";
-        pauseButton.innerHTML = "PAUSE";
-        pauseButton.id = "button";
-        pauseButton.onclick = function () {
-            if (!timer_paused) {
-                timer_paused = true;
-                document.getElementById("button").innerHTML = "RESUME";
-            } else {
-                timer_paused = false;
-                document.getElementById("button").innerHTML = "PAUSE";
-            }
-        };
-
-        document.getElementById("right").appendChild(timerLabel);
-        document.getElementById("right").appendChild(timer);
-
-        if (mode === "Competition Mode" || mode === "Cooperation Mode"){
-            var opponentScore = document.createElement("div");
-            opponentScore.style.backgroundColor = secondary_color;
-            opponentScore.id = "opponent-score";
-            var score = document.createElement("p");
-            score.id = "score-text";
-            score.innerHTML = "CURRENT OPPONENT SCORE";
-            var scorePercentage = document.createElement("h1");
-            scorePercentage.id = "score-percentage";
-            scorePercentage.style.fontSize = "50px";
-            opponentScore.appendChild(score);
-            opponentScore.appendChild(scorePercentage);
-            document.getElementById("right").appendChild(opponentScore);
-        }
-
-        document.getElementById("right").appendChild(pauseButton);
-
-        // Challenge screen setup done
-
-        beginTimer();
-
-        // Start timer if the bicycle is connected
-        // var y = setInterval(function () {
-        //     if (bicycleConnected) {
-        //         beginTimer();
-        //         clearInterval(y)
-        //     }
-        // }, 1000);
-    }
-
-    var opponentScore = 0;
-
-    function beginTimer() {
-        if (duration === "No timer") {
-            document.querySelector("#timer-label").innerHTML = "TIME ELAPSED";
-
-            // Elapsed time
-            var minutesElapsed = 0;
-            var secondsElapsed = 0;
-            var minutes = "";
-            var seconds = "";
-
-            var x = setInterval(function () {
-                if (!timer_paused) {
-                    minutes = minutesElapsed;
-
-                    if (secondsElapsed < 9) {
-                        seconds = "0" + secondsElapsed;
-                    }
-                    else {
-                        seconds = secondsElapsed;
-                    }
-                
-                    document.getElementById("timer").innerHTML = minutes + ":" + seconds;
-                    
-                    if (seconds === 59) {
-                        secondsElapsed = 0;
-                        minutesElapsed += 1;
-                    }
-                    else {
-                        secondsElapsed += 1;
-                    }
-
-                    // Goal not yet reached 
-                    if (bicyclePower >= 0 && Math.round(bicyclePower *10 / 100) <= 100) {
-                        var percentage = Math.round(bicyclePower *10 / 100);
-                        angle = percentage * 0.01 * 360;
-                        document.querySelector("#progress-circle").style.background =
-                            "radial-gradient(" +
-                            background_color +
-                            " 50%, transparent 51%), conic-gradient(black 0deg " +
-                            angle +
-                            "deg, " +
-                            secondary_color +
-                            " " +
-                            (angle + 1) +
-                            "deg 360deg)";
-                        document.querySelector("#progress-percentage").innerHTML = Math.round(percentage) + "%";
-
-
-                        // Functionality for DUO MODE
-                        // Time remaining, and the current user has not won yet
-                        if (mode === "Competition Mode" || mode === "Cooperation Mode") {
-                            // Get information about the other bicycle
-                            if (display === "left") {
-                                ipcRenderer.send("get-right-bicycle-power", [Math.round(bicyclePower)]);
-                                ipcRenderer.on("updated-right-bicycle-stats", (event, data) => {
-                                    opponentScore = data[0];
-                                    document.querySelector("#score-percentage").innerHTML = opponentScore + "%";
-                                })
-                            }
-                            else {
-                                ipcRenderer.send("get-left-bicycle-power", [Math.round(bicyclePower)]);
-                                ipcRenderer.on("updated-left-bicycle-stats", (event, data) => {
-                                    opponentScore = data[0];
-                                    document.querySelector("#score-percentage").innerHTML = opponentScore + "%";
-                                })
-                            }
-
-                            // // Cooperation mode, should display a common goal
-                            // if (mode === "Cooperation Mode") {
-
-                            // }
-
-                            // // Competition mode, should display opponent score next to it
-                            // else {
-
-                            // }
-                        }
-                    }
-
-                    // Goal reached
-                    else {
-                        // timer_paused = true;
-                        document.querySelector("#button").remove();
-                        clearInterval(x);
-                        document.querySelector("#progress-percentage").innerHTML = "100%";
-                 
-                        // Make the circle 100% black   
-                        
-
-                        // Disconnect bicycle
-                        if (display === "left") {
-                            disconnectBicycle(1);
-                        }
-                        else {
-                            disconnectBicycle(2);
-                        }
-                    }
-                }
-            }, 1000);
-
+    var pauseButton = document.createElement("button");
+    pauseButton.style.marginTop = "30px";
+    pauseButton.innerHTML = "PAUSE";
+    pauseButton.id = "button";
+    pauseButton.onclick = function () {
+        if (!timer_paused) {
+            timer_paused = true;
+            document.getElementById("button").innerHTML = "RESUME";
         } else {
-            document.querySelector("#timer-label").innerHTML = "TIME REMAINING";
+            timer_paused = false;
+            document.getElementById("button").innerHTML = "PAUSE";
+        }
+    };
 
-            if (duration === "30 seconds") {
-                var time = new Date().getTime() + 32000;
-            } else if (duration === "1 minute") {
-                var time = new Date().getTime() + 62000;
-            } else if (duration === "3 minutes") {
-                var time = new Date().getTime() + 182000;
-            }
+    document.getElementById("right").appendChild(timerLabel);
+    document.getElementById("right").appendChild(timer);
 
-            var x = setInterval(function () {
-                if (!timer_paused) {
-                    var distance = time - new Date().getTime();
+    if (mode === "Competition Mode"){
+        var opponentScore = document.createElement("div");
+        opponentScore.style.backgroundColor = secondary_color;
+        opponentScore.id = "opponent-score";
+        var score = document.createElement("p");
+        score.id = "score-text";
+        score.innerHTML = "OPPONENT SCORE";
+        var scorePercentage = document.createElement("h1");
+        scorePercentage.id = "score-percentage";
+        scorePercentage.style.fontSize = "50px";
+        opponentScore.appendChild(score);
+        opponentScore.appendChild(scorePercentage);
+        document.getElementById("right").appendChild(opponentScore);
+    }
 
-                    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                    if (seconds < 10) {
-                        seconds = "0" + seconds;
-                    }
-
-                    // Time still remaining
-                    if (distance > 0) {
-                        document.getElementById("timer").innerHTML = minutes + ":" + seconds;
-
-                        // Goal not yet reached 
-                        if (bicyclePower >= 0 && Math.round(bicyclePower *10 / 100) <= 100) {
-                            var percentage = Math.round(bicyclePower *10 / 100);
-                            angle = percentage * 0.01 * 360;
-                            document.querySelector("#progress-circle").style.background =
-                                "radial-gradient(" +
-                                background_color +
-                                " 50%, transparent 51%), conic-gradient(black 0deg " +
-                                angle +
-                                "deg, " +
-                                secondary_color +
-                                " " +
-                                (angle + 1) +
-                                "deg 360deg)";
-                            document.querySelector("#progress-percentage").innerHTML = Math.round(percentage) + "%";
+    document.getElementById("right").appendChild(pauseButton);
+}
 
 
-                            // Functionality for DUO MODE
-                            // Time remaining, and the current user has not won yet
-                            if (mode === "Competition Mode" || mode === "Cooperation Mode") {
-                                // Get information about the other bicycle
-                                if (display === "left") {
-                                    ipcRenderer.send("get-right-bicycle-power", [Math.round(bicyclePower)]);
-                                    ipcRenderer.on("updated-right-bicycle-stats", (event, data) => {
-                                        opponentScore = data[0];
-                                        console.log(data[0]);
-                                        console.log(data[1]);
-                                        document.querySelector("#score-percentage").innerHTML = Math.round(opponentScore*10 / 100) + "%";
-                                    })
-                                }
-                                else {
-                                    ipcRenderer.send("get-left-bicycle-power", [Math.round(bicyclePower)]);
-                                    ipcRenderer.on("updated-left-bicycle-stats", (event, data) => {
-                                        opponentScore = data[0];
-                                        document.querySelector("#score-percentage").innerHTML = Math.round(opponentScore*10 / 100) + "%";
-                                    })
-                                }
+function begin_challenge() {
+    if (mode === "Solo Mode") {
+        // Time remaining and goal not yet reached 
+        if (bicyclePower >= 0 && Math.round(bicyclePower *10 / 100) <= 100) {
+            // Update progress circle and percentage
+            var percentage = Math.round(bicyclePower *10 / 100);
+            angle = percentage * 0.01 * 360;
+            document.querySelector("#progress-circle").style.background =
+                "radial-gradient(" +
+                background_color +
+                " 50%, transparent 51%), conic-gradient(black 0deg " +
+                angle +
+                "deg, " +
+                secondary_color +
+                " " +
+                (angle + 1) +
+                "deg 360deg)";
+            document.querySelector("#progress-percentage").innerHTML = Math.round(percentage) + "%";
+        }
 
-                                // // Cooperation mode, should display a common goal
-                                // if (mode === "Cooperation Mode") {
-
-                                // }
-
-                                // // Competition mode, should display opponent score next to it
-                                // else {
-
-                                // }
-                            }
-                        }
-
-                        // Goal reached
-                        else {
-                            // timer_paused = true;
-                            document.querySelector("#button").remove();
-                            clearInterval(x);
-                            document.querySelector("#progress-percentage").innerHTML = "100%";
-
-                            // Disconnect bicycle
-                            if (display === "left") {
-                                disconnectBicycle(1);
-                            }
-                            else {
-                                disconnectBicycle(2);
-                            }
-                        }
-                    }
-                    // Time's up
-                    else {
-                        clearInterval(x);
-                    }
-                } else {
-                    time += 1000;
-                }
-            }, 1000);
+        // Time remaining and goal reached
+        else {
+            goalReached = true;
+            show_results();
         }
     }
 
-    document.querySelector("#back-arrow").onclick = function() {go_back()};
-    function go_back() {
-        location.href = "timer_duration_selection.html?appliance=" + appliance + "&mode=" + mode;
+    else if (mode === "Competition Mode") {
+
+        // Time remaining and no user has reached the goal yet
+        if (!userWon || !opponentWon) {
+
+            // Update progress circle and percentage
+            var percentage = Math.round(bicyclePower *10 / 100);
+            angle = percentage * 0.01 * 360;
+            document.querySelector("#progress-circle").style.background =
+                "radial-gradient(" +
+                background_color +
+                " 50%, transparent 51%), conic-gradient(black 0deg " +
+                angle +
+                "deg, " +
+                secondary_color +
+                " " +
+                (angle + 1) +
+                "deg 360deg)";
+            document.querySelector("#progress-percentage").innerHTML = Math.round(percentage) + "%";
+        
+            // Display opponent stats
+            if (display === "left") {
+                ipcRenderer.send("get-right-bicycle-power", [Math.round(bicyclePower)]);
+                ipcRenderer.on("updated-right-bicycle-stats", (event, data) => {
+                    opponentScore = data[0];
+                    document.querySelector("#score-percentage").innerHTML = Math.round(opponentScore*10 / 100) + "%";
+                })
+            }
+            else {
+                ipcRenderer.send("get-left-bicycle-power", [Math.round(bicyclePower)]);
+                ipcRenderer.on("updated-left-bicycle-stats", (event, data) => {
+                    opponentScore = data[0];
+                    document.querySelector("#score-percentage").innerHTML = Math.round(opponentScore*10 / 100) + "%";
+                })
+            }
+        }
+
+        // Check if the current user won
+        if (Math.round(bicyclePower *10 / 100) >= 100) {
+            userWon = true;
+            show_results();
+        }
+
+        // Check if the opponent won
+        if (Math.round(opponentScore*10 / 100) >= 100) {
+            opponentWon = true;
+            show_results();
+        }
     }
 
-    document.querySelector("#home-button").onclick = function() {go_to_home()};
-    function go_to_home() {
-        location.href = "appliance_selection.html";
+
+    // Cooperation mode
+    else {
+        // Time remaining and the users have not reached the goal yet
+        if (!commonGoalReached) {
+
+            // Get stats from cooperator
+            if (display === "left") {
+                ipcRenderer.send("get-right-bicycle-power", [Math.round(bicyclePower)]);
+                ipcRenderer.on("updated-right-bicycle-stats", (event, data) => {
+                    opponentScore = data[0];
+                })
+            }
+            else {
+                ipcRenderer.send("get-left-bicycle-power", [Math.round(bicyclePower)]);
+                ipcRenderer.on("updated-left-bicycle-stats", (event, data) => {
+                    opponentScore = data[0];
+                })
+            }
+
+            // Update progress circle and percentage
+            var percentage = Math.round((bicyclePower + opponentScore) *10 / 100);
+            angle = percentage * 0.01 * 360;
+            document.querySelector("#progress-circle").style.background =
+                "radial-gradient(" +
+                background_color +
+                " 50%, transparent 51%), conic-gradient(black 0deg " +
+                angle +
+                "deg, " +
+                secondary_color +
+                " " +
+                (angle + 1) +
+                "deg 360deg)";
+            document.querySelector("#progress-percentage").innerHTML = Math.round(percentage) + "%";
+        }
+
+        if ((bicyclePower + opponentScore) *10 / 100 >= 100) {
+            commonGoalReached = true;
+            show_results();
+        }
     }
+}
+
+
+
+ // ================================================= RESULTS SCREEN TO IMPLEMENT =================================================
+function show_results() {
+
+    var heading = document.querySelector("#heading");
+    var subheading = document.querySelector("#subheading");
+
+    // Goal not reached
+    if (timesUp) {
+        heading.innerHTML = "You've ran out of time...";
+        if (mode === "Solo Mode") {
+            subheading.innerHTML = "But you managed to generate " + (bicyclePower *10 / 100) + "% of the required power!";
+        }
+        else if (mode === "Cooperation Mode") {
+            subheading.innerHTML = "But you managed to generate " + ((bicyclePower + opponentScore) *10 / 100) + "% of the required power!";
+        }
+        else if (mode === "Competition Mode") {
+            subheading.innerHTML = "Neither of you won the challenge. But you generated "+ (bicyclePower) *10 / 100 + "% of the required power";
+        }
+    }
+
+    // Goal reached
+    else {
+        if (goalReached) {
+            // Solo mode, player won
+            heading.innerHTML = "Goal reached!";
+            subheading.innerHTML = "You generated 100% of the required power!";
+        }
+        else if (userWon) {
+            // Duo mode, player won
+            heading.innerHTML = "You won the challenge!";
+            subheading.innerHTML = "You generated 100% of the required power!";
+        }
+        else if (opponentWon) {
+            // Duo mode, opponent won
+            heading.innerHTML = "Your opponent won the challenge";
+            subheading.innerHTML = "But you managed to generate " + (bicyclePower *10 / 100) + "% of the required power!";
+        }
+        else if (commonGoalReached){
+            // Duo cooperative mode, goal reached
+            heading.innerHTML = "Goal reached!";
+            subheading.innerHTML = "Together, you generated 100% of the required power!";
+        }
+    }
+}
