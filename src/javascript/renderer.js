@@ -586,7 +586,6 @@ function begin_challenge() {
 }
 
 
-
  // ================================================= RESULTS SCREEN TO IMPLEMENT =================================================
 function show_results() {
 
@@ -656,4 +655,10 @@ function show_results() {
 
     resultText.innerHTML += "On average, one hour of " + appliance + " usage costs £" + cost + " and contributes " + carbonEmissions + "kg of CO₂e. Check out the information on the large screen to understand this data in context.";
     document.getElementById("middle").appendChild(resultText);
+    
+    var retryButton = document.querySelector("#button");
+    retryButton.innerHTML = "RETRY";
+    retryButton.onclick = function () {
+        location.href = "start_screen.html?appliance=" + appliance + "&mode=" + mode + "&duration=" + duration + "&display=" + display;
+    }
 }
