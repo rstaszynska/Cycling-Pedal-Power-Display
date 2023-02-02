@@ -14,13 +14,13 @@
                 </div>
                 <div class="selection">
                     <div class="top-row">
-                        <div class="darkblue appliance-button" onclick="navigate('led');">
+                        <div class="darkblue appliance-button" onclick="navigate('led light bulb');">
                             <p>LED Light Bulb</p>
-                            <img src="../images/led.png" />
+                            <img src="../images/ledlightbulb.png" />
                         </div>
-                        <div class="lightblue appliance-button" onclick="navigate('incandescent');">
+                        <div class="lightblue appliance-button" onclick="navigate('incandescent light bulb');">
                             <p>Incandescent Light Bulb</p>
-                            <img src="../images/incandescent.png" />
+                            <img src="../images/incandescentlightbulb.png" />
                         </div>
                         <div class="darkblue appliance-button" onclick="navigate('kettle');">
                             <p>Kettle</p>
@@ -37,7 +37,7 @@
                             <p>Laptop</p>
                             <img src="../images/laptop.png" />
                         </div>
-                        <div class="lightblue appliance-button" onclick="navigate('washingmachine');">
+                        <div class="lightblue appliance-button" onclick="navigate('washing machine');">
                             <p>Washing Machine</p>
                             <img src="../images/washingmachine.png" />
                         </div>
@@ -45,16 +45,6 @@
                 </div>
             </div>
         </div>
-
-        <script>
-            const params = new Proxy(new URLSearchParams(window.location.search), {
-                get: (searchParams, prop) => searchParams.get(prop),
-            });
-            let display = params.display;
-
-            function navigate(appliance) {
-                location.href = "appliance_info.html?appliance=" + appliance + "&display=" + display;
-            }
-        </script>
+        <script src="../javascript/appliance_selection.js"></script>
     </body>
 </html>

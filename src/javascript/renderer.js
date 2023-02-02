@@ -264,11 +264,11 @@ function setup_start_screen() {
     box_styling.style.border = "10px solid #4D9FFF";
     
     const appliance_img = document.querySelector("#chosen-appliance-img");
-    appliance_img.src = "../images/" + appliance + ".png";
+    appliance_img.src = "../images/" + appliance.split(" ").join("") + ".png";
     const name = document.querySelector("#appliance-name");
     const wattage = document.querySelector("#appliance-wattage");
     
-    if (appliance === "led" || appliance === "kettle" || appliance === "laptop") {
+    if (appliance === "led light bulb" || appliance === "kettle" || appliance === "laptop") {
         background_color = "#7CC0FF";
         secondary_color = "#b5dbfc";
     
@@ -289,7 +289,7 @@ function setup_start_screen() {
         background_color = "#99ECF8";
         secondary_color = "#baf3fc";
     
-        if (appliance === "incandescent") {
+        if (appliance === "incandescent light bulb") {
             name.innerHTML = "Incandescent Light Bulb";
             wattage.innerHTML = "W";
         } else if (appliance === "toaster") {
@@ -297,7 +297,7 @@ function setup_start_screen() {
             name.style.marginTop = "10vh";
             wattage.innerHTML = "W";
             appliance_img.style.height = "45%";
-        } else if (appliance === "washingmachine") {
+        } else if (appliance === "washing machine") {
             name.innerHTML = "Washing Machine";
             wattage.innerHTML = "W";
         }
@@ -587,15 +587,15 @@ function show_results() {
         heading.innerHTML = "You've ran out of time...";
         if (mode === "Solo Mode") {
             subheading.innerHTML = "But you managed to generate " + (bicyclePower *10 / 100) + "% of the required power!";
-            resultText.innerHTML = "You weren't able to generate enough electricity to power on the appliance for one hour, but you generated <b>" + bicyclePower + " watts </b, which is enough to power a " + appliance + " for <b> x minutes</b>! Nice try! <br><br>";
+            resultText.innerHTML = "You weren't able to generate enough electricity to power on the " + appliance + " for one hour, but you generated <b>" + bicyclePower + " watts </b, which is enough to power it on for <b> x minutes</b>! Nice try! <br><br>";
         }
         else if (mode === "Cooperation Mode") {
             subheading.innerHTML = "But you managed to generate " + ((bicyclePower + opponentScore) *10 / 100) + "% of the required power!";
-            resultText.innerHTML = "You weren't able to generate enough electricity to power on the appliance for one hour, but together you generated <b>" + bicyclePower + opponentScore + " watts </b>, which is enough to power a " + appliance + " for <b> x minutes</b>! Nice try! <br><br>";
+            resultText.innerHTML = "You weren't able to generate enough electricity to power on the " + appliance + " for one hour, but together you generated <b>" + (bicyclePower + opponentScore) + " watts </b>, which is enough to power it on for <b>" + minutes + " minutes</b>! Nice try! <br><br>";
         }
         else if (mode === "Competition Mode") {
             subheading.innerHTML = "Neither of you won the challenge. But you generated "+ (bicyclePower) *10 / 100 + "% of the required power";
-            resultText.innerHTML = "You weren't able to generate enough electricity to power on the appliance for one hour, but you generated <b>" + bicyclePower + " watts </b>, which is enough to power a " + appliance + " for <b> " + minutes + " minutes</b>! Nice try! <br><br>";
+            resultText.innerHTML = "You weren't able to generate enough electricity to power on the " + appliance + " for one hour, but you generated <b>" + bicyclePower + " watts </b>, which is enough to power it on for <b> " + minutes + " minutes</b>! Nice try! <br><br>";
         }
     }
 
@@ -605,25 +605,25 @@ function show_results() {
             // Solo mode, player won
             heading.innerHTML = "Goal reached!";
             subheading.innerHTML = "You generated 100% of the required power!";
-            resultText.innerHTML = "You were able to generate enough electricity to power on the appliance for one hour! That's a total of " + bicyclePower + " watts! Well done!";
+            resultText.innerHTML = "You were able to generate enough electricity to power on the " + appliance + " for one hour! That's a total of " + bicyclePower + " watts! Well done!";
         }
         else if (userWon) {
             // Duo mode, player won
             heading.innerHTML = "You won the challenge!";
             subheading.innerHTML = "You generated 100% of the required power!";
-            resultText.innerHTML = "You were able to generate enough electricity to power on the appliance for one hour! That's a total of " + bicyclePower + " watts! Well done!";
+            resultText.innerHTML = "You were able to generate enough electricity to power on the " + appliance + " for one hour! That's a total of " + bicyclePower + " watts! Well done!";
         }
         else if (opponentWon) {
             // Duo mode, opponent won
             heading.innerHTML = "Your opponent won the challenge";
             subheading.innerHTML = "But you managed to generate " + (bicyclePower *10 / 100) + "% of the required power!";
-            resultText.innerHTML = "You weren't able to generate enough electricity to power on the appliance for one hour, but you generated <b>" + bicyclePower + " watts</b>, which is enough to power a " + appliance + " for <b>" + minutes + "minutes</b>! Nice try!";
+            resultText.innerHTML = "You weren't able to generate enough electricity to power on the " + appliance + " for one hour, but you generated <b>" + bicyclePower + " watts</b>, which is enough to power it on for <b>" + minutes + "minutes</b>! Nice try!";
         }
         else if (commonGoalReached){
             // Duo cooperative mode, goal reached
             heading.innerHTML = "Goal reached!";
             subheading.innerHTML = "Together, you generated 100% of the required power!";
-            resultText.innerHTML = "You were able to generate enough electricity to power on the appliance for one hour! That's a total of " + bicyclePower + opponentScore + " watts! Great teamwork!";
+            resultText.innerHTML = "You were able to generate enough electricity to power on the " + appliance + "for one hour! That's a total of " + (bicyclePower + opponentScore) + " watts! Great teamwork!";
         }
     }
 

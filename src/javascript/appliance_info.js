@@ -5,11 +5,11 @@ let appliance = params.appliance;
 let display = params.display;
 
 const appliance_img = document.querySelector("#appliance-img");
-appliance_img.src = "../images/" + appliance + ".png";
+appliance_img.src = "../images/" + appliance.split(" ").join("") + ".png";
 
 
 
-if (appliance === "led" || appliance === "kettle" || appliance === "laptop") {
+if (appliance === "led light bulb" || appliance === "kettle" || appliance === "laptop") {
     document.querySelector(".appliance-info").classList.add("darkblue");
     const name = document.querySelector("#appliance-name");
     const wattage = document.querySelector("#appliance-wattage");
@@ -17,7 +17,7 @@ if (appliance === "led" || appliance === "kettle" || appliance === "laptop") {
     const cost = document.querySelector("#average-cost");
     const emissions = document.querySelector("#average-emissions");
     const question = document.querySelector("#appliance-name-q");
-    if (appliance === "led") {
+    if (appliance === "led light bulb") {
         name.innerHTML = "LED Light Bulb";
         wattage.innerHTML = "Wattage: <b>W</b>";
         usage.innerHTML = "Average monthly household usage: <b>kWh</b>";
@@ -54,7 +54,7 @@ else {
     const emissions = document.querySelector("#average-emissions");
     const question = document.querySelector("#appliance-name-q");
 
-    if (appliance === "incandescent") {
+    if (appliance === "incandescent light bulb") {
         name.innerHTML = "Incandescent Light Bulb";
         wattage.innerHTML = "Wattage: <b>W</b>";
         usage.innerHTML = "Average monthly household usage: <b>kWh</b>";
@@ -72,7 +72,7 @@ else {
         appliance_img.style.height = "60%";
         appliance_img.style.marginTop = "30%";
 
-    } else if (appliance === "washingmachine") {
+    } else if (appliance === "washing machine") {
         name.innerHTML = "Washing Machine";
         wattage.innerHTML = "Wattage: <b>W</b>";
         usage.innerHTML = "Average monthly household usage: <b>kWh</b>";
