@@ -447,3 +447,8 @@ body {
     margin-top: -30px;
     margin-bottom: 10px;
 }   
+
+#results-text {
+    margin-top: 75px;
+    font-size: 2.5vh;
+}
