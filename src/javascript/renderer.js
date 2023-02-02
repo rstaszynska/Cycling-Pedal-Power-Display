@@ -422,18 +422,41 @@ function setup_challenge_screen() {
     document.getElementById("right").appendChild(timerLabel);
     document.getElementById("right").appendChild(timer);
 
-    if (mode === "Competition Mode"){
+    if (mode === "Competition Mode" || mode === "Cooperation Mode") {
         var opponentScore = document.createElement("div");
         opponentScore.style.backgroundColor = secondary_color;
-        opponentScore.id = "opponent-score";
         var score = document.createElement("p");
         score.id = "score-text";
-        score.innerHTML = "OPPONENT SCORE";
         var scorePercentage = document.createElement("h1");
         scorePercentage.id = "score-percentage";
-        scorePercentage.style.fontSize = "50px";
-        opponentScore.appendChild(score);
-        opponentScore.appendChild(scorePercentage);
+
+        if (mode === "Cooperation Mode") {   
+            score.innerHTML = "PARTNER SCORE"; 
+            opponentScore.id = "both-scores";        
+            var userScore = document.createElement("p");
+            userScore.id = "score-text";
+            userScore.innerHTML = "MY SCORE";
+            var userScorePercentage = document.createElement("h1");
+            userScorePercentage.id = "user-score-percentage";
+            userScorePercentage.style.fontSize = "50px";
+            userScorePercentage.style.marginTop = "-20px";
+            scorePercentage.style.fontSize = "50px";
+            scorePercentage.style.marginTop = "-20px";
+            score.style.marginTop =  "-5px";
+
+            opponentScore.appendChild(userScore);
+            opponentScore.appendChild(userScorePercentage);
+            opponentScore.appendChild(score);
+            opponentScore.appendChild(scorePercentage);
+        }
+
+        else {
+            score.innerHTML = "OPPONENT SCORE";
+            opponentScore.id = "opponent-score";
+            scorePercentage.style.fontSize = "50px";
+            opponentScore.appendChild(score);
+            opponentScore.appendChild(scorePercentage);
+        }
         document.getElementById("right").appendChild(opponentScore);
     }
 
@@ -493,16 +516,15 @@ function begin_challenge() {
                 ipcRenderer.send("get-right-bicycle-power", [Math.round(bicyclePower)]);
                 ipcRenderer.on("updated-right-bicycle-stats", (event, data) => {
                     opponentScore = data[0];
-                    document.querySelector("#score-percentage").innerHTML = Math.round(opponentScore*10 / 100) + "%";
                 })
             }
             else {
                 ipcRenderer.send("get-left-bicycle-power", [Math.round(bicyclePower)]);
                 ipcRenderer.on("updated-left-bicycle-stats", (event, data) => {
                     opponentScore = data[0];
-                    document.querySelector("#score-percentage").innerHTML = Math.round(opponentScore*10 / 100) + "%";
                 })
             }
+            document.querySelector("#score-percentage").innerHTML = Math.round(opponentScore*10 / 100) + "%";
         }
 
         // Check if the current user won
@@ -537,7 +559,9 @@ function begin_challenge() {
                     opponentScore = data[0];
                 })
             }
-
+            document.querySelector("#user-score-percentage").innerHTML = Math.round(bicyclePower*10 / 100) + "%";
+            document.querySelector("#score-percentage").innerHTML = Math.round(opponentScore*10 / 100) + "%";
+            
             // Update progress circle and percentage
             var percentage = Math.round((bicyclePower + opponentScore) *10 / 100);
             angle = percentage * 0.01 * 360;
@@ -581,21 +605,24 @@ function show_results() {
     if (mode === "Competition Mode") {  
         document.querySelector("#opponent-score").remove();
     }
+    else if (mode === "Cooperation Mode") {
+        document.querySelector("#both-scores").remove();
+    }
 
     // Goal not reached
     if (timesUp) {
         heading.innerHTML = "You've ran out of time...";
         if (mode === "Solo Mode") {
             subheading.innerHTML = "But you managed to generate " + (bicyclePower *10 / 100) + "% of the required power!";
-            resultText.innerHTML = "You weren't able to generate enough electricity to power on the " + appliance + " for one hour, but you generated <b>" + bicyclePower + " watts </b, which is enough to power it on for <b> x minutes</b>! Nice try! <br><br>";
+            resultText.innerHTML = "You weren't able to generate enough electricity to power on the " + appliance + " for one hour, but you generated <b>" + bicyclePower + " watts</b, which is enough to power it on for <b> x minutes</b>! Nice try! <br><br>";
         }
         else if (mode === "Cooperation Mode") {
             subheading.innerHTML = "But you managed to generate " + ((bicyclePower + opponentScore) *10 / 100) + "% of the required power!";
-            resultText.innerHTML = "You weren't able to generate enough electricity to power on the " + appliance + " for one hour, but together you generated <b>" + (bicyclePower + opponentScore) + " watts </b>, which is enough to power it on for <b>" + minutes + " minutes</b>! Nice try! <br><br>";
+            resultText.innerHTML = "You weren't able to generate enough electricity to power on the " + appliance + " for one hour, but together you generated <b>" + (bicyclePower + opponentScore) + " watts</b>, which is enough to power it on for <b>" + minutes + " minutes</b>! Nice try! <br><br>";
         }
         else if (mode === "Competition Mode") {
             subheading.innerHTML = "Neither of you won the challenge. But you generated "+ (bicyclePower) *10 / 100 + "% of the required power";
-            resultText.innerHTML = "You weren't able to generate enough electricity to power on the " + appliance + " for one hour, but you generated <b>" + bicyclePower + " watts </b>, which is enough to power it on for <b> " + minutes + " minutes</b>! Nice try! <br><br>";
+            resultText.innerHTML = "You weren't able to generate enough electricity to power on the " + appliance + " for one hour, but you generated <b>" + bicyclePower + " watts</b>, which is enough to power it on for <b> " + minutes + " minutes</b>! Nice try! <br><br>";
         }
     }
 

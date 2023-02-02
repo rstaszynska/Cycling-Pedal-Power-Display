@@ -439,7 +439,6 @@ body {
 }
 
 #opponent-score {
-    background-color: white;
     width: 80%;
     height: 180px;
     border-radius: 50px;
@@ -447,6 +446,15 @@ body {
     margin-top: -30px;
     margin-bottom: 10px;
 }   
+
+#both-scores {
+    width: 80%;
+    height: 250px;
+    border-radius: 50px;
+    margin-left: 15%;
+    margin-top: -50px;
+    margin-bottom: 5px;
+}
 
 #results-text {
     margin-top: 75px;
