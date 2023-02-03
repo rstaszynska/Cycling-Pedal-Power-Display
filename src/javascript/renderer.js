@@ -1,5 +1,5 @@
 const {ipcRenderer} = require("electron");
-// require('events').EventEmitter.defaultMaxListeners = 100;
+require('events').EventEmitter.defaultMaxListeners = 100;
 
 /* =========================================================================================================
     Portions of the following code have been adapted from software released under the MIT license:
@@ -565,7 +565,7 @@ function show_results() {
         heading.innerHTML = "You've ran out of time...";
         if (mode === "Solo Mode") {
             subheading.innerHTML = "But you managed to generate " + (bicyclePower *10 / 100) + "% of the required power!";
-            resultText.innerHTML = "You weren't able to generate enough electricity to power on the " + appliance + " for one hour, but you generated <b>" + bicyclePower + " watts</b, which is enough to power it on for <b> x minutes</b>! Nice try! <br><br>";
+            resultText.innerHTML = "You weren't able to generate enough electricity to power on the " + appliance + " for one hour, but you generated <b>" + bicyclePower + " watts</b, which is enough to power it on for <b>" + minutes + " minutes</b>! Nice try! <br><br>";
         }
         else if (mode === "Cooperation Mode") {
             subheading.innerHTML = "But you managed to generate " + ((bicyclePower + opponentScore) *10 / 100) + "% of the required power!";
@@ -579,29 +579,30 @@ function show_results() {
 
     // Goal reached
     else {
+        timer_paused = true;
         if (goalReached) {
             // Solo mode, player won
             heading.innerHTML = "Goal reached!";
             subheading.innerHTML = "You generated 100% of the required power!";
-            resultText.innerHTML = "You were able to generate enough electricity to power on the " + appliance + " for one hour! That's a total of " + bicyclePower + " watts! Well done!";
+            resultText.innerHTML = "You were able to generate enough electricity to power on the " + appliance + " for one hour! That's a total of <b>" + bicyclePower + " watts</b>! Well done! <br><br>";
         }
         else if (userWon) {
             // Duo mode, player won
             heading.innerHTML = "You won the challenge!";
             subheading.innerHTML = "You generated 100% of the required power!";
-            resultText.innerHTML = "You were able to generate enough electricity to power on the " + appliance + " for one hour! That's a total of " + bicyclePower + " watts! Well done!";
+            resultText.innerHTML = "You were able to generate enough electricity to power on the " + appliance + " for one hour! That's a total of <b>" + bicyclePower + " watts</b>! Well done! <br><br>";
         }
         else if (opponentWon) {
             // Duo mode, opponent won
             heading.innerHTML = "Your opponent won the challenge";
             subheading.innerHTML = "But you managed to generate " + (bicyclePower *10 / 100) + "% of the required power!";
-            resultText.innerHTML = "You weren't able to generate enough electricity to power on the " + appliance + " for one hour, but you generated <b>" + bicyclePower + " watts</b>, which is enough to power it on for <b>" + minutes + "minutes</b>! Nice try!";
+            resultText.innerHTML = "You weren't able to generate enough electricity to power on the " + appliance + " for one hour, but you generated <b>" + bicyclePower + " watts</b>, which is enough to power it on for <b>" + minutes + " minutes</b>! Nice try! <br><br>";
         }
         else if (commonGoalReached){
             // Duo cooperative mode, goal reached
             heading.innerHTML = "Goal reached!";
             subheading.innerHTML = "Together, you generated 100% of the required power!";
-            resultText.innerHTML = "You were able to generate enough electricity to power on the " + appliance + "for one hour! That's a total of " + (bicyclePower + opponentScore) + " watts! Great teamwork!";
+            resultText.innerHTML = "You were able to generate enough electricity to power on the " + appliance + " for one hour! That's a total of <b>" + (bicyclePower + opponentScore) + "  watts</b>! Great teamwork! <br><br>";
         }
     }
 
