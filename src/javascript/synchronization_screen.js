@@ -1,5 +1,5 @@
-const {ipcRenderer} = require("electron");
-require('events').EventEmitter.defaultMaxListeners = 1000;
+let {ipcRenderer} = require("electron");
+// require('events').EventEmitter.defaultMaxListeners = 1000;
 
 
 const params = new Proxy(new URLSearchParams(window.location.search), {
@@ -10,58 +10,25 @@ let mode = params.mode;
 let duration = params.duration;
 let display = params.display;
 
-var settingsUpdated = false;
+
+var matchText = document.createElement("h3");
+matchText.id = "matchText";
+var rematch = false;
+
 
 setup_start_screen();
 
 document.querySelector(".continue").onclick = function() {synchronize()};
 
-function synchronize() {
-
-    // Check if the settings match up
-   
-    var opponentMode;
-    var opponentDuration;
-    var opponentAppliance;
-
-    // BUG: when you change settings on one of the screens, it doesn't update, and it also doesn't receive data again
-
-    var x = setInterval(function () {
-        ipcRenderer.send("get-"+display+"-bicycle-settings", [mode, duration, appliance]);
-        ipcRenderer.on("updated-"+display+"-bicycle-settings", (event, data) => {
-            settingsUpdated = true;
-            opponentMode = data[0];
-            opponentDuration = data[1];
-            opponentAppliance = data[2];
-            console.log("checking...");
-            if (opponentMode === "Competition Mode" || opponentMode === "Cooperation Mode") {
-                console.log(mode, opponentMode, appliance, opponentAppliance, duration, opponentDuration);
-                if (mode === opponentMode && appliance === opponentAppliance && duration === opponentDuration) {
-                    console.log("match");
-                    
-                    // GO TO START
-                    location.href = "start_screen.html?appliance=" + appliance + "&mode=" + mode + "&duration=" + duration + "&display=" + display;
-                }
-                else {
-                    
-                    console.log("no match");
-
-                }
-                clearInterval(x);
-            }
-        })
-    }, 1000);
-    
-}
-
 document.querySelector("#back-arrow").onclick = function() {go_back()};
 function go_back() {
-    settingsUpdated = false;
-    location.href = "timer_duration_selection.html?appliance=" + appliance + "&mode=" + mode;
+    // clearInterval(x);
+    location.href = "timer_duration_selection.html?appliance=" + appliance + "&mode=" + mode + "&display=" + display;
 }
 
 document.querySelector("#home-button").onclick = function() {go_to_home()};
 function go_to_home() {
+    // clearInterval(x);
     location.href = "appliance_selection.html";
 }
 
@@ -126,26 +93,77 @@ function setup_start_screen() {
     subheading.innerHTML = "Both players must select the same challenge options";
 }
 
+var loading = document.createElement("h1");
+loading.id = "loading";
 
-    // Loading...
-    // if (!bicycleConnected) {
-    //     document.querySelector(".left").style.opacity = "0%";
-    //     var loading = document.createElement("h1");
-    //     loading.innerHTML = "Loading";
-    //     loading.id = "loading";
-    //     document.getElementById("middle").appendChild(loading);
-    //     var dotsNumber = 0;
-    //     var dots = setInterval(function () {
-    //         if (dotsNumber === 3) {
-    //             dotsNumber = 0;
-    //             loading.innerHTML = "Loading";
-    //         } else {
-    //             loading.innerHTML += ".";
-    //             dotsNumber++;
-    //         }
-    //     }, 1500);
-    // } else {
-    //     document.querySelector("#loading").remove();
+function synchronize() {
+    // Loading setup
+    loading.innerHTML = "SYNCHRONIZING";
+    document.querySelector("#button").remove();
+    if (rematch) {
+        document.querySelector("#matchText").remove();
+    }
+    
+    document.getElementById("middle").appendChild(loading);
+    document.querySelector(".left").style.opacity = "20%";
+    document.querySelector("#right").style.opacity = "20%";
+    var dotsNumber = 0;
+
+    // Check if the settings match up
+    heading.innerHTML = "Synchronizing challenge options";
+    var opponentMode;
+    var opponentDuration;
+    var opponentAppliance;
+
+    var x = setInterval(function () {
+        data = ipcRenderer.sendSync("get-"+display+"-bicycle-settings", [mode, duration, appliance]);
+        
+        opponentMode = data[0];
+        opponentDuration = data[1];
+        opponentAppliance = data[2];
+
+        if (opponentMode !== undefined && opponentDuration !== undefined && opponentAppliance !== undefined) {
+            if (mode === opponentMode && appliance === opponentAppliance && duration === opponentDuration) {
+                clearInterval(x);
+                loading.innerHTML = "SYNCHRONIZED!"
+                const timeout = setTimeout(goToStartScreen, 2000);
+            }
+            else {
+                clearInterval(x);
+                loading.innerHTML = "OPTIONS MISMATCHED";
+                const timeout = setTimeout(matchOptions, 2000);
+            }
+        }
+        // settings not received yet
+        else {
+            if (dotsNumber === 3) {
+                dotsNumber = 0;
+                loading.innerHTML = "SYNCHRONIZING";
+            } else {
+                loading.innerHTML += ".";
+                dotsNumber++;
+            }
+        }
+    }, 1500);
+}
+
+function matchOptions() {
+    matchText.innerHTML = "Please select the same challenge options and try again";
+    matchText.style.fontSize = "30px";
+    document.getElementById("middle").appendChild(matchText);
+    rematch = true;
+
+    var button = document.createElement("button");
+    button.id = "button";
+    button.innerHTML = "RETRY";
+    button.onclick = function() {synchronize()};
+    document.getElementById("middle").appendChild(button);
+}
+
+function goToStartScreen() {
+    location.href = "start_screen.html?appliance=" + appliance + "&mode=" + mode + "&duration=" + duration + "&display=" + display;
+}
+
 
     //     // Countdown
     //     var countdownNumber = document.createElement("h1");
@@ -163,4 +181,5 @@ function setup_start_screen() {
     //     }, 1000);
 
     // document.querySelector("#countdown").remove();
+
 

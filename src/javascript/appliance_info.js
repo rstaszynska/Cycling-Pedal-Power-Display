@@ -83,7 +83,7 @@ else {
 }
 
 function go_back() {
-    location.href = "appliance_selection.html";
+    location.href = "appliance_selection.html?display=" + display;
 }
 
 function select() {

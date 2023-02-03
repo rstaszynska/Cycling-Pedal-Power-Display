@@ -7,9 +7,9 @@ let display = params.display;
 
 function go_back() {
     if (mode === "Solo Mode") {
-        location.href = "mode_selection.html?appliance=" + appliance;
+        location.href = "mode_selection.html?appliance=" + appliance + "&display=" + display;
     } else {
-        location.href = "duo_mode.html?appliance=" + appliance;
+        location.href = "duo_mode.html?appliance=" + appliance + "&display=" + display;
     }
 }
 

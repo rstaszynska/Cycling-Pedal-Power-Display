@@ -1,5 +1,5 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
-const path = require("path");
+let { app, BrowserWindow, ipcMain } = require("electron");
+let path = require("path");
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
@@ -93,21 +93,19 @@ const createWindow = () => {
         events.sender.send("updated-left-bicycle-stats", [leftBicyclePower]);
     })
 
-    ipcMain.on("get-right-bicycle-settings", (events, data) => {
+    ipcMain.on("get-right-bicycle-settings", (event, data) => {
         leftBicycleMode = data[0];
         leftBicycleDuration = data[1];
         leftBicycleAppliance = data[2];
-        events.sender.send("updated-right-bicycle-settings", [rightBicycleMode, rightBicycleDuration, rightBicycleAppliance]);
+        event.returnValue = [rightBicycleMode, rightBicycleDuration, rightBicycleAppliance];
     })
 
-    ipcMain.on("get-left-bicycle-settings", (events, data) => {
+    ipcMain.on("get-left-bicycle-settings", (event, data) => {
         rightBicycleMode = data[0];
         rightBicycleDuration = data[1];
         rightBicycleAppliance = data[2];
-        events.sender.send("updated-left-bicycle-settings", [leftBicycleMode, leftBicycleDuration, leftBicycleAppliance]);
+        event.returnValue = [leftBicycleMode, leftBicycleDuration, leftBicycleAppliance];
     })
-
-
 };
 
 // This method will be called when Electron has finished

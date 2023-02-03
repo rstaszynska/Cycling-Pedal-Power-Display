@@ -1,5 +1,5 @@
 const {ipcRenderer} = require("electron");
-require('events').EventEmitter.defaultMaxListeners = 100;
+// require('events').EventEmitter.defaultMaxListeners = 100;
 
 /* =========================================================================================================
     Portions of the following code have been adapted from software released under the MIT license:
@@ -234,7 +234,7 @@ function beginTimer() {
 
 document.querySelector("#back-arrow").onclick = function() {go_back()};
 function go_back() {
-    location.href = "timer_duration_selection.html?appliance=" + appliance + "&mode=" + mode;
+    location.href = "timer_duration_selection.html?appliance=" + appliance + "&mode=" + mode + "&display=" + display;
 }
 
 document.querySelector("#home-button").onclick = function() {go_to_home()};
