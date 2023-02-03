@@ -18,5 +18,10 @@ function go_to_home() {
 }
 
 function select(duration) {
-    location.href = "start_screen.html?appliance=" + appliance + "&mode=" + mode + "&duration=" + duration + "&display=" + display;
+    if (mode === "Solo Mode") {
+        location.href = "start_screen.html?appliance=" + appliance + "&mode=" + mode + "&duration=" + duration + "&display=" + display;
+    }
+    else {
+        location.href = "synchronization_screen.html?appliance=" + appliance + "&mode=" + mode + "&duration=" + duration + "&display=" + display;
+    }
 }

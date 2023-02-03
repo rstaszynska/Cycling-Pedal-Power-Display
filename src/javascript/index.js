@@ -12,7 +12,6 @@ const createWindow = () => {
         width: 1250,
         height: 900,
         webPreferences: {
-            // preload: path.join(__dirname, "preload.js"),
             nodeIntegration: true,
             contextIsolation: false,
         },
@@ -47,7 +46,6 @@ const createWindow = () => {
         width: 1250,
         height: 900,
         webPreferences: {
-            // preload: path.join(__dirname, "preload.js"),
             nodeIntegration: true,
             contextIsolation: false,
         },
@@ -75,8 +73,15 @@ const createWindow = () => {
     });
 
 
-    let rightBicyclePower = 0;
-    let leftBicyclePower = 0;
+    var rightBicyclePower = 0;
+    var rightBicycleMode;
+    var rightBicycleDuration;
+    var rightBicycleAppliance;
+
+    var leftBicyclePower = 0;
+    var leftBicycleMode;
+    var leftBicycleDuration;
+    var leftBicycleAppliance;
 
     ipcMain.on("get-right-bicycle-power", (events, data) => {
         leftBicyclePower = data[0];
@@ -86,6 +91,20 @@ const createWindow = () => {
     ipcMain.on("get-left-bicycle-power", (events, data) => {
         rightBicyclePower = data[0];
         events.sender.send("updated-left-bicycle-stats", [leftBicyclePower]);
+    })
+
+    ipcMain.on("get-right-bicycle-settings", (events, data) => {
+        leftBicycleMode = data[0];
+        leftBicycleDuration = data[1];
+        leftBicycleAppliance = data[2];
+        events.sender.send("updated-right-bicycle-settings", [rightBicycleMode, rightBicycleDuration, rightBicycleAppliance]);
+    })
+
+    ipcMain.on("get-left-bicycle-settings", (events, data) => {
+        rightBicycleMode = data[0];
+        rightBicycleDuration = data[1];
+        rightBicycleAppliance = data[2];
+        events.sender.send("updated-left-bicycle-settings", [leftBicycleMode, leftBicycleDuration, leftBicycleAppliance]);
     })
 
 

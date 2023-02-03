@@ -1,4 +1,5 @@
 const {ipcRenderer} = require("electron");
+require('events').EventEmitter.defaultMaxListeners = 100;
 
 /* =========================================================================================================
     Portions of the following code have been adapted from software released under the MIT license:
@@ -135,26 +136,15 @@ let mode = params.mode;
 let duration = params.duration;
 let display = params.display;
 
-
 var timer_paused = false;
+
 
 setup_start_screen();
 document.querySelector(".start").onclick = function() {start()};
 
 function start() {
-    // Setup challenge screen
     setup_challenge_screen();
-
-    // Begin the challenge
     beginTimer();
-
-    // Start timer if the bicycle is connected
-    // var y = setInterval(function () {
-    //     if (bicycleConnected) {
-    //         beginTimer();
-    //         clearInterval(y)
-    //     }
-    // }, 1000);
 }
 
 var opponentScore = 0;
@@ -337,43 +327,6 @@ function setup_challenge_screen() {
     else if (display === "right") {
         connectBicycle(2);
     }
-
-    // Loading...
-    // if (!bicycleConnected) {
-    //     document.querySelector(".left").style.opacity = "0%";
-    //     var loading = document.createElement("h1");
-    //     loading.innerHTML = "Loading";
-    //     loading.id = "loading";
-    //     document.getElementById("middle").appendChild(loading);
-    //     var dotsNumber = 0;
-    //     var dots = setInterval(function () {
-    //         if (dotsNumber === 3) {
-    //             dotsNumber = 0;
-    //             loading.innerHTML = "Loading";
-    //         } else {
-    //             loading.innerHTML += ".";
-    //             dotsNumber++;
-    //         }
-    //     }, 1500);
-    // } else {
-    //     document.querySelector("#loading").remove();
-
-    //     // Countdown
-    //     var countdownNumber = document.createElement("h1");
-    //     countdownNumber.id = "countdown";
-    //     document.getElementById("middle").appendChild(countdownNumber);
-    //     var number = 3;
-    //     var countdown = setInterval(function () {
-    //         if (number < 1) {
-    //             clearInterval(countdown);
-    //             countdownNumber.innerHTML = "GO!";
-    //         } else {
-    //             countdownNumber.innerHTML = number;
-    //             number--;
-    //         }
-    //     }, 1000);
-
-    // document.querySelector("#countdown").remove();
 
     document.querySelector(".left").style.opacity = "100%";
 
@@ -585,8 +538,7 @@ function begin_challenge() {
     }
 }
 
-
- // ================================================= RESULTS SCREEN TO IMPLEMENT =================================================
+ // ================================================= RESULTS SCREEN =================================================
 function show_results() {
 
     var cost = 0;
