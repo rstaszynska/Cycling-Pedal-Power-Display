@@ -239,7 +239,7 @@ function go_back() {
 
 document.querySelector("#home-button").onclick = function() {go_to_home()};
 function go_to_home() {
-    location.href = "appliance_selection.html";
+    location.href = "appliance_selection.html?display=" + display;
 }
 
 var background_color;

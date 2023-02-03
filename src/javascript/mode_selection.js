@@ -4,12 +4,13 @@ const params = new Proxy(new URLSearchParams(window.location.search), {
 let appliance = params.appliance;
 let display = params.display;
 
+
 function go_back() {
-    location.href = "appliance_info.html?appliance=" + appliance;
+    location.href = "appliance_info.html?appliance=" + appliance + "&display=" + display;
 }
 
 function go_to_home() {
-    location.href = "appliance_selection.html";
+    location.href = "appliance_selection.html?display=" + display;
 }
 
 function select(mode) {

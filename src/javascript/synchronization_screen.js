@@ -1,7 +1,6 @@
 let {ipcRenderer} = require("electron");
 // require('events').EventEmitter.defaultMaxListeners = 1000;
 
-
 const params = new Proxy(new URLSearchParams(window.location.search), {
     get: (searchParams, prop) => searchParams.get(prop),
 });
@@ -9,7 +8,6 @@ let appliance = params.appliance;
 let mode = params.mode;
 let duration = params.duration;
 let display = params.display;
-
 
 var matchText = document.createElement("h3");
 matchText.id = "matchText";
@@ -29,7 +27,7 @@ function go_back() {
 document.querySelector("#home-button").onclick = function() {go_to_home()};
 function go_to_home() {
     // clearInterval(x);
-    location.href = "appliance_selection.html";
+    location.href = "appliance_selection.html?display=" + display;
 }
 
 
@@ -99,15 +97,17 @@ loading.id = "loading";
 function synchronize() {
     // Loading setup
     loading.innerHTML = "SYNCHRONIZING";
+    loading.id = "loading";
+    var dotsNumber = 0;
+
     document.querySelector("#button").remove();
     if (rematch) {
         document.querySelector("#matchText").remove();
     }
     
     document.getElementById("middle").appendChild(loading);
-    document.querySelector(".left").style.opacity = "20%";
-    document.querySelector("#right").style.opacity = "20%";
-    var dotsNumber = 0;
+    document.querySelector(".left").style.opacity = "30%";
+    document.querySelector("#right").style.opacity = "30%";
 
     // Check if the settings match up
     heading.innerHTML = "Synchronizing challenge options";
@@ -130,8 +130,21 @@ function synchronize() {
             }
             else {
                 clearInterval(x);
+                loading.id = "mismatch";
                 loading.innerHTML = "OPTIONS MISMATCHED";
-                const timeout = setTimeout(matchOptions, 2000);
+                matchText.innerHTML = "Please select the same challenge options and try again";
+                matchText.style.fontSize = "30px";
+                matchText.style.fontWeight = "300";
+                matchText.style.color = "rgb(37, 37, 37)";
+                document.getElementById("middle").appendChild(matchText);
+                rematch = true;
+
+                var button = document.createElement("button");
+                button.id = "button";
+                button.innerHTML = "RETRY";
+                button.style.marginTop = "0px";
+                button.onclick = function() {synchronize()};
+                document.getElementById("middle").appendChild(button);
             }
         }
         // settings not received yet
@@ -147,39 +160,26 @@ function synchronize() {
     }, 1500);
 }
 
-function matchOptions() {
-    matchText.innerHTML = "Please select the same challenge options and try again";
-    matchText.style.fontSize = "30px";
-    document.getElementById("middle").appendChild(matchText);
-    rematch = true;
-
-    var button = document.createElement("button");
-    button.id = "button";
-    button.innerHTML = "RETRY";
-    button.onclick = function() {synchronize()};
-    document.getElementById("middle").appendChild(button);
-}
-
 function goToStartScreen() {
     location.href = "start_screen.html?appliance=" + appliance + "&mode=" + mode + "&duration=" + duration + "&display=" + display;
 }
 
 
-    //     // Countdown
-    //     var countdownNumber = document.createElement("h1");
-    //     countdownNumber.id = "countdown";
-    //     document.getElementById("middle").appendChild(countdownNumber);
-    //     var number = 3;
-    //     var countdown = setInterval(function () {
-    //         if (number < 1) {
-    //             clearInterval(countdown);
-    //             countdownNumber.innerHTML = "GO!";
-    //         } else {
-    //             countdownNumber.innerHTML = number;
-    //             number--;
-    //         }
-    //     }, 1000);
+//     // Countdown
+//     var countdownNumber = document.createElement("h1");
+//     countdownNumber.id = "countdown";
+//     document.getElementById("middle").appendChild(countdownNumber);
+//     var number = 3;
+//     var countdown = setInterval(function () {
+//         if (number < 1) {
+//             clearInterval(countdown);
+//             countdownNumber.innerHTML = "GO!";
+//         } else {
+//             countdownNumber.innerHTML = number;
+//             number--;
+//         }
+//     }, 1000);
 
-    // document.querySelector("#countdown").remove();
+// document.querySelector("#countdown").remove();
 
 

@@ -5,6 +5,7 @@ let appliance = params.appliance;
 let mode = params.mode;
 let display = params.display;
 
+
 function go_back() {
     if (mode === "Solo Mode") {
         location.href = "mode_selection.html?appliance=" + appliance + "&display=" + display;
@@ -14,7 +15,7 @@ function go_back() {
 }
 
 function go_to_home() {
-    location.href = "appliance_selection.html";
+    location.href = "appliance_selection.html?display=" + display;
 }
 
 function select(duration) {

@@ -281,7 +281,7 @@ body {
     font-size: 60px;
     font-weight: 600;
     margin-top: 20vh;
-    margin-left: calc(15% - 20px);
+    /* margin-left: calc(15% - 20px); */
 }
 
 #right {
@@ -356,7 +356,14 @@ body {
     color: rgb(37, 37, 37);
     font-size: 50px;
     font-weight: 500;
-    margin-top: 60%;
+    margin-top: 50%;
+}
+
+#mismatch {
+    color: rgb(37, 37, 37);
+    font-size: 50px;
+    font-weight: 500;
+    margin-top: 30%;
 }
 
 

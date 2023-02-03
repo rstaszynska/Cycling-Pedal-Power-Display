@@ -5,11 +5,11 @@ let appliance = params.appliance;
 let display = params.display;
 
 function go_back() {
-    location.href = "mode_selection.html?appliance=" + appliance;
+    location.href = "mode_selection.html?appliance=" + appliance + "&display=" + display;
 }
 
 function go_to_home() {
-    location.href = "appliance_selection.html";
+    location.href = "appliance_selection.html" + "&display=" + display;
 }
 
 function select(mode) {
