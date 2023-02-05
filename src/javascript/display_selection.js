@@ -1,3 +1,8 @@
 function select(display) {
-    location.href = "welcome_screen.html?display=" + display;
+    if (display === "large"){
+        location.href = "large_display.html";
+    }
+    else {
+        location.href = "welcome_screen.html?display=" + display;
+    }
 }
