@@ -262,16 +262,16 @@ function setup_start_screen() {
         background_color = "#7CC0FF";
         secondary_color = "#b5dbfc";
     
-        if (appliance === "led") {
+        if (appliance === "led light bulb") {
             name.innerHTML = "LED Light Bulb";
-            wattage.innerHTML = "W";
+            wattage.innerHTML = "10 W";
         } else if (appliance === "kettle") {
             name.innerHTML = "Electric Kettle";
-            wattage.innerHTML = "W";
+            wattage.innerHTML = "3000 W";
         } else if (appliance === "laptop") {
             name.innerHTML = "Laptop";
             name.style.marginTop = "10vh";
-            wattage.innerHTML = "W";
+            wattage.innerHTML = "430 W";
             appliance_img.style.height = "50%";
             appliance_img.style.marginLeft= "10%";
         }
@@ -281,15 +281,15 @@ function setup_start_screen() {
     
         if (appliance === "incandescent light bulb") {
             name.innerHTML = "Incandescent Light Bulb";
-            wattage.innerHTML = "W";
+            wattage.innerHTML = "100 W";
         } else if (appliance === "toaster") {
             name.innerHTML = "Toaster";
             name.style.marginTop = "10vh";
-            wattage.innerHTML = "W";
+            wattage.innerHTML = "850 W";
             appliance_img.style.height = "45%";
         } else if (appliance === "washing machine") {
             name.innerHTML = "Washing Machine";
-            wattage.innerHTML = "W";
+            wattage.innerHTML = "900 W";
         }
     }
     
@@ -314,8 +314,8 @@ function setup_start_screen() {
 function setup_challenge_screen() {
     document.querySelectorAll(".start-screen-element").forEach((element) => element.remove());
 
-    if (appliance === "led" || appliance === "incandescent") {
-        heading.innerHTML = "Can you power an " + appliance + " light bulb?";
+    if (appliance === "led light bulb" || appliance === "incandescent") {
+        heading.innerHTML = "Can you power an " + appliance + " ?";
     } else {
         heading.innerHTML = "Can you power a " + appliance + "?";
     }
