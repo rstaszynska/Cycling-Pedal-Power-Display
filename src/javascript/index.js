@@ -83,6 +83,9 @@ const createWindow = () => {
     var leftBicycleDuration;
     var leftBicycleAppliance;
 
+    var leftReady;
+    var rightReady;
+
     ipcMain.on("get-right-bicycle-power", (events, data) => {
         leftBicyclePower = data[0];
         events.sender.send("updated-right-bicycle-stats", [rightBicyclePower]);
@@ -94,18 +97,37 @@ const createWindow = () => {
     })
 
     ipcMain.on("get-right-bicycle-settings", (event, data) => {
+        rightBicycleMode = data[0];
+        rightBicycleDuration = data[1];
+        rightBicycleAppliance = data[2];
+        event.returnValue = [leftBicycleMode, leftBicycleDuration, leftBicycleAppliance];
+    })
+
+    ipcMain.on("get-left-bicycle-settings", (event, data) => {
         leftBicycleMode = data[0];
         leftBicycleDuration = data[1];
         leftBicycleAppliance = data[2];
         event.returnValue = [rightBicycleMode, rightBicycleDuration, rightBicycleAppliance];
     })
 
-    ipcMain.on("get-left-bicycle-settings", (event, data) => {
-        rightBicycleMode = data[0];
-        rightBicycleDuration = data[1];
-        rightBicycleAppliance = data[2];
-        event.returnValue = [leftBicycleMode, leftBicycleDuration, leftBicycleAppliance];
+    ipcMain.on("get-right-ready-status", (event, data) => {
+        rightReady = data[0];
     })
+
+    ipcMain.on("get-left-ready-status", (event, data) => {
+        leftReady = data[0];
+        
+        var x = setInterval(function () {
+            if (rightReady && leftReady) {
+                mainWindow.webContents.send("permission-to-begin", [true]);
+                win.webContents.send("permission-to-begin", [true]);
+                clearInterval(x);
+                leftReady = false;
+                rightReady = false;
+            }
+        }, 1000);
+    })
+
 };
 
 // This method will be called when Electron has finished

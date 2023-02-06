@@ -17,6 +17,7 @@ class Bicycle {
                 filters: [
                     {
                         name: [bicycleName],
+                        // Cycling Power uuid
                         services: ["00001818-0000-1000-8000-00805f9b34fb"],
                     },
                 ],
@@ -41,6 +42,7 @@ class Bicycle {
                 return reserver.getPrimaryService("00001818-0000-1000-8000-00805f9b34fb");
             })
             .then((service) => {
+                // Cycling Power Measurement uuid
                 return service.getCharacteristic("00002a63-0000-1000-8000-00805f9b34fb");
             })
             .then((characteristic) => characteristic.startNotifications())
@@ -141,10 +143,30 @@ var timer_paused = false;
 
 setup_start_screen();
 document.querySelector(".start").onclick = function() {start()};
-
 function start() {
-    setup_challenge_screen();
-    beginTimer();
+    if (mode === "Competition Mode" || mode === "Cooperation Mode") {
+        ipcRenderer.send("get-"+ display + "-ready-status", [true]);
+        ipcRenderer.on("permission-to-begin", (event, data) => {
+            if (display === "left") {
+                connectBicycle(1);
+            }
+            else if (display === "right") {
+                connectBicycle(2);
+            }
+            setup_challenge_screen();
+            beginTimer();
+        })
+    }
+    else {
+        if (display === "left") {
+            connectBicycle(1);
+        }
+        else if (display === "right") {
+            connectBicycle(2);
+        }
+        setup_challenge_screen();
+        beginTimer();
+    }
 }
 
 var opponentScore = 0;
@@ -214,7 +236,6 @@ function beginTimer() {
                 // Time still remaining
                 if (distance > 0) {
                     document.getElementById("timer").innerHTML = minutes + ":" + seconds;
-
                     begin_challenge();    
                 }
 
@@ -223,7 +244,7 @@ function beginTimer() {
                     clearInterval(x);
                     timesUp = true;
                     const myTimeout = setTimeout(show_results, 3000);
-                    // show_results(); // Goal not reached
+                    show_results(); // Goal not reached
                 }
             } else {
                 time += 1000;
@@ -321,12 +342,12 @@ function setup_challenge_screen() {
     }
     subheading.innerHTML = "Cycle to generate electricity";
 
-    if (display === "left") {
-        connectBicycle(1);
-    }
-    else if (display === "right") {
-        connectBicycle(2);
-    }
+    // if (display === "left") {
+    //     connectBicycle(1);
+    // }
+    // else if (display === "right") {
+    //     connectBicycle(2);
+    // }
 
     document.querySelector(".left").style.opacity = "100%";
 
@@ -340,16 +361,16 @@ function setup_challenge_screen() {
     progressText.id = "progress-text";
 
     var progressPercentage = document.createElement("p");
-    progressPercentage.innerHTML = 0 + "%";
     progressPercentage.id = "progress-percentage";
+    progressPercentage.innerHTML = 0 + "%";
     progressText.appendChild(progressPercentage);
 
     var percentageDescriptor = document.createElement("p");
     percentageDescriptor.innerHTML = "of power generated";
     progressText.appendChild(percentageDescriptor);
 
-    document.getElementById("middle").appendChild(progressCircle);
-    document.getElementById("middle").appendChild(progressText);
+    document.querySelector("#middle").appendChild(progressCircle);
+    document.querySelector("#middle").appendChild(progressText);
 
     var timerLabel = document.createElement("p");
     timerLabel.id = "timer-label";

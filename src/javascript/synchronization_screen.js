@@ -157,7 +157,7 @@ function synchronize() {
                 dotsNumber++;
             }
         }
-    }, 1500);
+    }, 1000);
 }
 
 function goToStartScreen() {
