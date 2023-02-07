@@ -52,6 +52,16 @@ const createWindow = () => {
     });
     win.webContents.openDevTools();
     win.loadFile(path.join(__dirname, '../templates/display_selection.html'));
+
+    // const largeDisplay = new BrowserWindow({
+    //     width: 1250,
+    //     height: 900,
+    //     webPreferences: {
+    //         nodeIntegration: true,
+    //         contextIsolation: false,
+    //     },
+    // });
+    // largeDisplay.loadFile(path.join(__dirname, '../templates/display_selection.html'));
     
 
     win.webContents.on("select-bluetooth-device", (event, deviceList, callback) => {

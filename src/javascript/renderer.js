@@ -1,4 +1,5 @@
 const {ipcRenderer} = require("electron");
+// const { clearInterval } = require("timers");
 require('events').EventEmitter.defaultMaxListeners = 100;
 
 /* =========================================================================================================
@@ -11,7 +12,7 @@ var bicyclePower = 0;
 class Bicycle {
     device;
 
-    async connectBicycle(bicycleName) {
+    async connectBicycle(bicycleName, bicycleNumber) {
         await navigator.bluetooth
             .requestDevice({
                 filters: [
@@ -26,15 +27,14 @@ class Bicycle {
                 this.device = device;
                 this.device.addEventListener("gattserverd", function () {
                     setTimeout(function () {
-                        reconnectBicycle(bicycleName);
+                        reconnectBicycle(bicycleNumber);
                     }, 2000);
                 });
-
-                this.startConnection(bicycleName);
+                this.startConnection();
             });
     }
 
-    async startConnection(bicycleName) {
+    async startConnection() {
         this.device.gatt.connect();
         await this.device.gatt
             .connect()
@@ -46,10 +46,9 @@ class Bicycle {
                 return service.getCharacteristic("00002a63-0000-1000-8000-00805f9b34fb");
             })
             .then((characteristic) => characteristic.startNotifications())
-
             .then((characteristic) => {
                 characteristic.addEventListener("characteristicvaluechanged", function () {
-                    testChange(event, bicycleName);
+                    testChange(event);
                 });
             })
             .catch((error) => {
@@ -62,7 +61,7 @@ class Bicycle {
             await this.device.gatt.disconnect();
         }
         catch {
-            console.log("gatt issue");
+            console.log("disconnecting gatt issue");
         }
         
     }
@@ -80,14 +79,14 @@ const deviceOne = new Bicycle();
 const deviceTwo = new Bicycle();
 
 async function connectBicycle(bicycleNumber) {
-    if (bicycleNumber == 1) {
-        await deviceOne.connectBicycle("Tacx Flux 27168");
-        console.log("connected bike 1");
-        // Tacx Flux 27168
-    } else {
-        await deviceTwo.connectBicycle("Tacx Flux 27280");
-        console.log("connected bike 2");
-        // Tacx Flux 27280
+    if (bicycleNumber === 1) {
+        await deviceOne.connectBicycle("Tacx Flux 27168", 1);
+        console.log("Bike 1 connected") 
+    } 
+    
+    else if  (bicycleNumber === 2) {
+        await deviceTwo.connectBicycle("Tacx Flux 27280", 2);
+        console.log("Bike 2 connected") 
     }
 }
 
@@ -96,15 +95,15 @@ async function reconnectBicycle(bicycleNumber) {
         await deviceOne.startConnection("Tacx Flux 27168");
         if (!deviceOne.isConnected()) {
             setTimeout(function () {
-                reconnectBicycle("Tacx Flux 27168");
-            }, 5000);
+                reconnectBicycle(1);
+            }, 2000);
         }
     } else {
         deviceTwo.startConnection("Tacx Flux 27280");
         if (!deviceTwo.isConnected()) {
             setTimeout(function () {
-                reconnectBicycle("Tacx Flux 27280");
-            }, 5000);
+                reconnectBicycle(2);
+            }, 2000);
         }
     }
 }
@@ -143,6 +142,7 @@ var timer_paused = false;
 
 setup_start_screen();
 document.querySelector(".start").onclick = function() {start()};
+
 function start() {
     if (mode === "Competition Mode" || mode === "Cooperation Mode") {
         ipcRenderer.send("get-"+ display + "-ready-status", [true]);
@@ -152,18 +152,19 @@ function start() {
             }
             else if (display === "right") {
                 connectBicycle(2);
-            }
+            } 
             setup_challenge_screen();
             beginTimer();
         })
     }
+
     else {
         if (display === "left") {
             connectBicycle(1);
         }
         else if (display === "right") {
-            connectBicycle(2);
-        }
+            connectBicycle(2); 
+        } 
         setup_challenge_screen();
         beginTimer();
     }
@@ -243,7 +244,6 @@ function beginTimer() {
                 else {
                     clearInterval(x);
                     timesUp = true;
-                    const myTimeout = setTimeout(show_results, 3000);
                     show_results(); // Goal not reached
                 }
             } else {
@@ -341,13 +341,6 @@ function setup_challenge_screen() {
         heading.innerHTML = "Can you power a " + appliance + "?";
     }
     subheading.innerHTML = "Cycle to generate electricity";
-
-    // if (display === "left") {
-    //     connectBicycle(1);
-    // }
-    // else if (display === "right") {
-    //     connectBicycle(2);
-    // }
 
     document.querySelector(".left").style.opacity = "100%";
 
@@ -559,8 +552,17 @@ function begin_challenge() {
     }
 }
 
+
+
  // ================================================= RESULTS SCREEN =================================================
 function show_results() {
+
+    if (display == "left") {
+        disconnectBicycle(1);
+    }
+    else {
+        disconnectBicycle(2);
+    }
 
     var cost = 0;
     var carbonEmissions = 0;
