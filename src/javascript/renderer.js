@@ -216,7 +216,8 @@ function beginTimer() {
         document.querySelector("#timer-label").innerHTML = "TIME REMAINING";
 
         if (duration === "30 seconds") {
-            var time = new Date().getTime() + 31000;
+            var time = new Date().getTime() + 3000;
+            // var time = new Date().getTime() + 31000;
         } else if (duration === "1 minute") {
             var time = new Date().getTime() + 61000;
         } else if (duration === "3 minutes") {
@@ -278,6 +279,9 @@ function setup_start_screen() {
     appliance_img.src = "../images/" + appliance.split(" ").join("") + ".png";
     const name = document.querySelector("#appliance-name");
     const wattage = document.querySelector("#appliance-wattage");
+
+    const appliance_on_img = document.createElement("img");
+    appliance_on_img.src = "../images/" + appliance.split(" ").join("") + "_on.png";
     
     if (appliance === "led light bulb" || appliance === "kettle" || appliance === "laptop") {
         background_color = "#7CC0FF";
@@ -295,6 +299,7 @@ function setup_start_screen() {
             wattage.innerHTML = "430 W";
             appliance_img.style.height = "50%";
             appliance_img.style.marginLeft= "10%";
+            appliance_on_img.id = "laptop-screen";
         }
     } else {
         background_color = "#99ECF8";
@@ -311,9 +316,10 @@ function setup_start_screen() {
         } else if (appliance === "washing machine") {
             name.innerHTML = "Washing Machine";
             wattage.innerHTML = "900 W";
+            appliance_on_img.id = "washing-machine";
         }
     }
-    
+
     box_styling.style.backgroundColor = background_color;
     
     var heading = document.querySelector("#heading");
@@ -329,7 +335,9 @@ function setup_start_screen() {
         const image_to_show = document.querySelector("#image-left");
         image_to_show.src = "../images/girl-on-bicycle.png";
         image_to_show.style.marginRight = "0px";
-    }        
+    }       
+    
+    document.querySelector(".left").appendChild(appliance_on_img);
 }
 
 function setup_challenge_screen() {
@@ -477,7 +485,7 @@ function begin_challenge() {
 
         // Time remaining and no user has reached the goal yet
         if (!userWon || !opponentWon) {
-
+            
             // Update progress circle and percentage
             var percentage = Math.round(bicyclePower *10 / 100);
             angle = percentage * 0.01 * 360;
@@ -598,12 +606,14 @@ function show_results() {
         document.querySelector("#both-scores").remove();
     }
 
+    add_animation_effect();
+
     // Goal not reached
     if (timesUp) {
         heading.innerHTML = "You've ran out of time...";
         if (mode === "Solo Mode") {
             subheading.innerHTML = "But you managed to generate " + (bicyclePower *10 / 100) + "% of the required power!";
-            resultText.innerHTML = "You weren't able to generate enough electricity to power on the " + appliance + " for one hour, but you generated <b>" + bicyclePower + " watts</b, which is enough to power it on for <b>" + minutes + " minutes</b>! Nice try! <br><br>";
+            resultText.innerHTML = "You weren't able to generate enough electricity to power on the " + appliance + " for one hour, but you generated <b>" + bicyclePower + " watts</b>, which is enough to power it on for <b>" + minutes + " minutes</b>! Nice try! <br><br>";
         }
         else if (mode === "Cooperation Mode") {
             subheading.innerHTML = "But you managed to generate " + ((bicyclePower + opponentScore) *10 / 100) + "% of the required power!";
@@ -618,6 +628,7 @@ function show_results() {
     // Goal reached
     else {
         timer_paused = true;
+        // add_animation_effect();
         if (goalReached) {
             // Solo mode, player won
             heading.innerHTML = "Goal reached!";
@@ -651,5 +662,16 @@ function show_results() {
     retryButton.innerHTML = "RETRY";
     retryButton.onclick = function () {
         location.href = "start_screen.html?appliance=" + appliance + "&mode=" + mode + "&duration=" + duration + "&display=" + display;
+    }
+}
+
+function add_animation_effect() {
+
+    if (appliance === "laptop") {
+        document.querySelector("#laptop-screen").classList += "fade-in-image";
+        document.querySelector("#laptop-screen").style.opacity = "100%";
+    }
+    else if (appliance === "washing machine") {
+        document.querySelector("#washing-machine").classList += "rotate-image";
     }
 }
