@@ -473,6 +473,8 @@ body {
 }
 
 
+/* Appliance animation effects */
+
 @keyframes fadeIn {
     0% { opacity: 0; }
     100% { opacity: 1; }
@@ -485,6 +487,29 @@ body {
 @keyframes rotate {
     0% { rotate: 0deg; }
     100% { rotate: 36000deg; }
+}
+
+.rotate-image {
+    animation: rotate 240s;
+    animation-iteration-count: 10;
+}
+
+@keyframes move-up {
+    0% { margin-top: 28px; }
+    100% { margin-top: -5px;}
+}
+
+.toast-bread-1 {
+    animation: move-up 0.8s;
+}
+
+@keyframes move-2-up {
+    0% { margin-top: 20px; }
+    100% { margin-top: -15px;}
+}
+
+.toast-bread-2 {
+    animation: move-2-up 0.8s;
 }
 
 .rotate-image {
@@ -532,4 +557,47 @@ body {
     height: 300px;
     opacity: 0%;
     rotate: -12.5deg;
+}
+
+#toaster-layer-4 {
+    margin-left: 25px;
+    height: 315px;
+}
+
+/* grill */
+#toaster-layer-3 {
+    position: absolute;
+    margin-top: 40px;
+    margin-left: -285px;
+    height: 33px;
+}
+
+/* bread slice 2 */
+#toaster-bread-2 {
+    position: absolute;
+    margin-top: 20px; /* this is what changes in the animation to -15px*/
+    margin-left: -230px;
+    height: 85px;
+}
+
+/* bread slice 1 */
+#toaster-bread-1 {
+    position: absolute;
+    margin-top: 28px; /* this is what changes in the animation to -5px*/
+    margin-left: -265px;
+    height: 85px;
+}
+
+#toaster-layer-1 {
+    position: absolute;
+    margin-top: 22.5px;
+    margin-left: -360px;
+    height: 148px;
+}
+
+#toaster-layer-0 {
+    position: absolute;
+    margin-top: 65px;
+    margin-left: -145px;
+    height: 25px;
 }

@@ -283,6 +283,11 @@ function setup_start_screen() {
     if (appliance === "kettle") {
         appliance_on_img.src = "../images/" + appliance.split(" ").join("") + "_on.gif";
     }
+    else if (appliance === "toaster") {
+        // appliance_img.src = "../images/" + appliance.split(" ").join("") + "_layer_4.png";
+        appliance_img.src = "../images/toaster_layer_4.png";
+        appliance_on_img.src = "../images/toaster_layer_2.png";
+    }
     else {
         appliance_on_img.src = "../images/" + appliance.split(" ").join("") + "_on.png";
     }
@@ -307,6 +312,7 @@ function setup_start_screen() {
             appliance_img.style.marginLeft= "10%";
             appliance_on_img.id = "laptop-screen";
         }
+        document.querySelector(".left").appendChild(appliance_on_img);
     } else {
         background_color = "#99ECF8";
         secondary_color = "#baf3fc";
@@ -315,15 +321,44 @@ function setup_start_screen() {
             name.innerHTML = "Incandescent Light Bulb";
             wattage.innerHTML = "100 W";
             appliance_on_img.id = "incandescent-light";
+            document.querySelector(".left").appendChild(appliance_on_img);
+
         } else if (appliance === "toaster") {
             name.innerHTML = "Toaster";
             name.style.marginTop = "10vh";
             wattage.innerHTML = "850 W";
-            appliance_img.style.height = "45%";
+            // appliance_img.style.height = "45%";
+            appliance_img.id = "toaster-layer-4";
+            appliance_on_img.id = "toaster-bread-2";
+
+            const toaster_layer_3 = document.createElement("img");
+            toaster_layer_3.src = "../images/toaster_layer_3.png";
+            toaster_layer_3.id = "toaster-layer-3";
+
+            const toaster_bread_2 = document.createElement("img");
+            toaster_bread_2.src = "../images/toaster_layer_2.png";
+            toaster_bread_2.id = "toaster-bread-1";
+
+            const toaster_layer_1 = document.createElement("img");
+            toaster_layer_1.src = "../images/toaster_layer_1.png";
+            toaster_layer_1.id = "toaster-layer-1";
+
+            const toaster_layer_0 = document.createElement("img");
+            toaster_layer_0.src = "../images/toaster_layer_0.png";
+            toaster_layer_0.id = "toaster-layer-0";
+            
+
+            document.querySelector(".left").appendChild(appliance_on_img);
+            document.querySelector(".left").appendChild(toaster_layer_3);
+            document.querySelector(".left").appendChild(toaster_bread_2);
+            document.querySelector(".left").appendChild(toaster_layer_1);
+            document.querySelector(".left").appendChild(toaster_layer_0);
+
         } else if (appliance === "washing machine") {
             name.innerHTML = "Washing Machine";
             wattage.innerHTML = "900 W";
             appliance_on_img.id = "washing-machine";
+            document.querySelector(".left").appendChild(appliance_on_img);
         }
     }
 
@@ -343,8 +378,6 @@ function setup_start_screen() {
         image_to_show.src = "../images/girl-on-bicycle.png";
         image_to_show.style.marginRight = "0px";
     }       
-    
-    document.querySelector(".left").appendChild(appliance_on_img);
 }
 
 function setup_challenge_screen() {
@@ -688,5 +721,11 @@ function add_animation_effect() {
     }
     else if (appliance === "kettle") {
         document.querySelector("#kettle").style.opacity = "50%";
+    }
+    else {
+        document.querySelector("#toaster-bread-1").classList += "toast-bread-1";
+        document.querySelector("#toaster-bread-1").style.marginTop = "-5px" ;
+        document.querySelector("#toaster-bread-2").classList += "toast-bread-2";
+        document.querySelector("#toaster-bread-2").style.marginTop = "-15px" ;
     }
 }
