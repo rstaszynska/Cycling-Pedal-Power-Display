@@ -280,7 +280,12 @@ function setup_start_screen() {
     const wattage = document.querySelector("#appliance-wattage");
 
     const appliance_on_img = document.createElement("img");
-    appliance_on_img.src = "../images/" + appliance.split(" ").join("") + "_on.png";
+    if (appliance === "kettle") {
+        appliance_on_img.src = "../images/" + appliance.split(" ").join("") + "_on.gif";
+    }
+    else {
+        appliance_on_img.src = "../images/" + appliance.split(" ").join("") + "_on.png";
+    }
     
     if (appliance === "led light bulb" || appliance === "kettle" || appliance === "laptop") {
         background_color = "#7CC0FF";
@@ -293,6 +298,7 @@ function setup_start_screen() {
         } else if (appliance === "kettle") {
             name.innerHTML = "Electric Kettle";
             wattage.innerHTML = "3000 W";
+            appliance_on_img.id = "kettle";
         } else if (appliance === "laptop") {
             name.innerHTML = "Laptop";
             name.style.marginTop = "10vh";
@@ -607,8 +613,6 @@ function show_results() {
         document.querySelector("#both-scores").remove();
     }
 
-    add_animation_effect();
-
     // Goal not reached
     if (timesUp) {
         heading.innerHTML = "You've ran out of time...";
@@ -629,7 +633,7 @@ function show_results() {
     // Goal reached
     else {
         timer_paused = true;
-        // add_animation_effect();
+        add_animation_effect();
         if (goalReached) {
             // Solo mode, player won
             heading.innerHTML = "Goal reached!";
@@ -667,7 +671,6 @@ function show_results() {
 }
 
 function add_animation_effect() {
-
     if (appliance === "laptop") {
         document.querySelector("#laptop-screen").classList += "fade-in-image";
         document.querySelector("#laptop-screen").style.opacity = "100%";
@@ -682,5 +685,8 @@ function add_animation_effect() {
     else if (appliance === "led light bulb") {
         document.querySelector("#led-light").classList += "fade-in-image";
         document.querySelector("#led-light").style.opacity = "100%";
+    }
+    else if (appliance === "kettle") {
+        document.querySelector("#kettle").style.opacity = "50%";
     }
 }

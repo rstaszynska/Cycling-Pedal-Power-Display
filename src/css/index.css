@@ -524,3 +524,12 @@ body {
     margin-left: -242.5px;
     opacity: 0%;
 }
+
+#kettle {
+    position: absolute;
+    margin-top: -125px;
+    margin-left: -570px;
+    height: 300px;
+    opacity: 0%;
+    rotate: -12.5deg;
+}
