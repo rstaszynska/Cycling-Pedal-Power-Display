@@ -2,19 +2,26 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: linear-gradient(180deg, #99ecf8 0%, #4d9fff 100%);
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    margin: 0 auto;
+    background-image: linear-gradient(180deg, #99ecf8, #4d9fff);
+    background-attachment:fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .outer-container {
-    width: 99vw;
-    height: 95.5vh;
+    height: 100%;
+    width: 100%;
 }
 
 .content-container {
     position: relative;
     width: 90vw;
     height: 90vh;
-    margin: 2.5% auto;
+    margin: 5vh auto;
     background: #ffffff;
     border: 5px solid #f3f3f3;
     border-radius: 50px;
@@ -112,11 +119,11 @@ body {
 
 .appliance-info {
     width: 75%;
-    height: 60%;
+    height: 68%;
     border-radius: 50px;
     text-align: center;
     margin: 0 auto;
-    margin-top: 5%;
+    margin-top: 3.25%;
     display: flex;
 }
 
@@ -145,10 +152,7 @@ body {
 .appliance-info-text {
     height: 100%;
     width: 70%;
-}
-
-.appliance-info-text h2 {
-    margin-top: 10%;
+    font-size: 22.5px;
 }
 
 #selection-button {
@@ -164,32 +168,37 @@ body {
 /* Mode Selection Screen */
 
 .mode-selection {
+    width: 80%;
     height: 70%;
-    width: 75vw;
     display: flex;
     margin: 0 auto;
-    justify-content: center;
+    margin-top: 3.25%;
 }
 
 .mode {
-    height: 33vw;
-    width: 40vw;
-    margin: 2.5vw 1.5vw;
+    width: 700px;
+    height: 600px;
+    margin: 0 25px;
     border-radius: 50px;
     text-align: center;
 }
 
 .mode p {
-    font-size: 20px;
+    margin-top: -5px;
+    font-size: 22.5px;
 }
 
 #solo-mode p {
-    margin-top: 3vw;
+    margin-top: 2.5vw;
 }
 
 .mode img {
     height: 20vw;
     width: 20vw;
+}
+
+.duo-mode-text {
+    margin-top: 25px !important;
 }
 
 .duo-mode-imgs {
@@ -217,16 +226,15 @@ body {
 
 .timer_selection {
     margin: 0 auto;
-    margin-top: 2.75%;
-    height: 60%;
-    width: 75%;
+    margin-top: 3.25%;
+    width: 77%;
+    height: 70%;
 }
 
 .timer_option {
     width: 100%;
     height: 20%;
-    margin-top: 25px;
-    margin-bottom: 5px;
+    margin-bottom: 25px;
     border-radius: 30px;
 }
 
@@ -238,12 +246,13 @@ body {
 
 .challenge-screen {
     width: 75%;
-    height: 60%;
+    height: 68%;
     border-radius: 50px;
     text-align: center;
     margin: 0 auto;
-    margin-top: 5%;
+    margin-top: 3.25%;
     display: flex;
+    font-size: 22.5px;
 }
 
 .left {
@@ -262,7 +271,6 @@ body {
 
 #appliance-wattage {
     margin-top: -1.5vh;
-    font-size: 16px;
 }
 
 #middle {
@@ -280,7 +288,7 @@ body {
     border-radius: 20px;
     font-size: 60px;
     font-weight: 600;
-    margin-top: 20vh;
+    margin-top: 55%;
 }
 
 #right {
@@ -320,33 +328,33 @@ body {
 }
 
 #timer-label, #score-text {
-    font-size: 25px;
+    font-size: 25px !important;
     font-family: K2DLight;
 }
 
 #timer {
-    font-size: 75px;
+    font-size: 75px !important;
     font-family: K2DBold;
     margin-top: -30px !important;
 }
 
 #progress-circle {
     border-radius: 50%;
-    width: 38vh;
-    height: 38vh;
+    width: 41vh;
+    height: 41vh;
     margin: 0 auto;
-    margin-top: 15%;
+    margin-top: 10vh;
 }
 
 #progress-text {
     margin-top: -95%;
     z-index: 1;
     text-align: center;
-    margin-left: 20px;
 }
 
 #progress-percentage {
     font-size: 80px;
+    margin-top: 25%;
     margin-bottom: 0;
 }
 
@@ -365,7 +373,6 @@ body {
     margin-top: 30%;
 }
 
-
 .display-selection {
     width: 90vw;
     display: flex;
@@ -383,7 +390,6 @@ body {
     border-radius: 50px;
 }
 
-
 .outer {
     width: 98vw;
     height: 100vh;
@@ -397,7 +403,6 @@ body {
     width: 100vw;
     z-index: 2;
 }
-
 
 .inner-left {
     width: 45%;

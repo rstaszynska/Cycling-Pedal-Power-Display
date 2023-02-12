@@ -13,7 +13,7 @@ if (appliance === "led light bulb" || appliance === "kettle" || appliance === "l
     document.querySelector(".appliance-info").classList.add("darkblue");
     const name = document.querySelector("#appliance-name");
     const wattage = document.querySelector("#appliance-wattage");
-    const usage = document.querySelector("#average-usage");
+    // const usage = document.querySelector("#average-usage");
     const cost = document.querySelector("#average-cost");
     const emissions = document.querySelector("#average-emissions");
     const question = document.querySelector("#appliance-name-q");
@@ -49,7 +49,7 @@ else {
     document.querySelector(".appliance-info").classList.add("lightblue");
     const name = document.querySelector("#appliance-name");
     const wattage = document.querySelector("#appliance-wattage");
-    const usage = document.querySelector("#average-usage");
+    // const usage = document.querySelector("#average-usage");
     const cost = document.querySelector("#average-cost");
     const emissions = document.querySelector("#average-emissions");
     const question = document.querySelector("#appliance-name-q");

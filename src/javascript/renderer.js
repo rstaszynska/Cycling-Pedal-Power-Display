@@ -180,7 +180,7 @@ function beginTimer() {
 
         // Elapsed time
         var minutesElapsed = 0;
-        var secondsElapsed = 0;
+        var secondsElapsed = 1;
         var minutes = "";
         var seconds = "";
 
@@ -216,11 +216,11 @@ function beginTimer() {
         document.querySelector("#timer-label").innerHTML = "TIME REMAINING";
 
         if (duration === "30 seconds") {
-            var time = new Date().getTime() + 32000;
+            var time = new Date().getTime() + 31000;
         } else if (duration === "1 minute") {
-            var time = new Date().getTime() + 62000;
+            var time = new Date().getTime() + 61000;
         } else if (duration === "3 minutes") {
-            var time = new Date().getTime() + 182000;
+            var time = new Date().getTime() + 181000;
         }
 
         var x = setInterval(function () {
@@ -369,13 +369,28 @@ function setup_challenge_screen() {
     timerLabel.id = "timer-label";
 
     var timer = document.createElement("p");
-    timer.innerHTML = "";
+    if (duration === "30 seconds") {
+        timer.innerHTML = "0:30";
+    } else if (duration === "1 minute") {
+        timer.innerHTML = "1:00";
+    } else if (duration === "3 minutes") {
+        timer.innerHTML = "3:00";
+    }
+    else {
+        timer.innerHTML = "0:00";
+    }
     timer.id = "timer";
 
     var pauseButton = document.createElement("button");
     pauseButton.style.marginTop = "30px";
     pauseButton.innerHTML = "PAUSE";
     pauseButton.id = "button";
+    if (mode ==="Solo Mode") {
+        pauseButton.style.marginTop = "45%";
+    }
+    else {
+        pauseButton.style.marginLeft = "10%";
+    }
     pauseButton.onclick = function () {
         if (!timer_paused) {
             timer_paused = true;
