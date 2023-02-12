@@ -216,8 +216,7 @@ function beginTimer() {
         document.querySelector("#timer-label").innerHTML = "TIME REMAINING";
 
         if (duration === "30 seconds") {
-            var time = new Date().getTime() + 3000;
-            // var time = new Date().getTime() + 31000;
+            var time = new Date().getTime() + 31000;
         } else if (duration === "1 minute") {
             var time = new Date().getTime() + 61000;
         } else if (duration === "3 minutes") {
@@ -290,6 +289,7 @@ function setup_start_screen() {
         if (appliance === "led light bulb") {
             name.innerHTML = "LED Light Bulb";
             wattage.innerHTML = "10 W";
+            appliance_on_img.id = "led-light";
         } else if (appliance === "kettle") {
             name.innerHTML = "Electric Kettle";
             wattage.innerHTML = "3000 W";
@@ -308,6 +308,7 @@ function setup_start_screen() {
         if (appliance === "incandescent light bulb") {
             name.innerHTML = "Incandescent Light Bulb";
             wattage.innerHTML = "100 W";
+            appliance_on_img.id = "incandescent-light";
         } else if (appliance === "toaster") {
             name.innerHTML = "Toaster";
             name.style.marginTop = "10vh";
@@ -673,5 +674,13 @@ function add_animation_effect() {
     }
     else if (appliance === "washing machine") {
         document.querySelector("#washing-machine").classList += "rotate-image";
+    }
+    else if (appliance === "incandescent light bulb") {
+        document.querySelector("#incandescent-light").classList += "fade-in-image";
+        document.querySelector("#incandescent-light").style.opacity = "100%";
+    }
+    else if (appliance === "led light bulb") {
+        document.querySelector("#led-light").classList += "fade-in-image";
+        document.querySelector("#led-light").style.opacity = "100%";
     }
 }
