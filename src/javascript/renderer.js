@@ -138,6 +138,7 @@ let duration = params.duration;
 let display = params.display;
 
 var timer_paused = false;
+var challenge_is_ongoing = false;
 
 
 setup_start_screen();
@@ -188,7 +189,7 @@ function beginTimer() {
             if (!timer_paused) {
                 minutes = minutesElapsed;
 
-                if (secondsElapsed < 9) {
+                if (secondsElapsed <= 9) {
                     seconds = "0" + secondsElapsed;
                 }
                 else {
@@ -255,7 +256,35 @@ function beginTimer() {
 
 document.querySelector("#back-arrow").onclick = function() {go_back()};
 function go_back() {
+    if (challenge_is_ongoing) {
+        // modal message saying that the challenge will stop
+        timer_paused = true;
+        document.getElementById("button").innerHTML = "RESUME";
+        modal.style.display = "block";
+    }
+    
+    else {
+        location.href = "timer_duration_selection.html?appliance=" + appliance + "&mode=" + mode + "&display=" + display;
+    }
+}
+
+document.querySelector("#yes-button").onclick = function() {
     location.href = "timer_duration_selection.html?appliance=" + appliance + "&mode=" + mode + "&display=" + display;
+};
+
+document.querySelector("#no-button").onclick = function() {
+    modal.style.display = "none";
+};
+
+var close = document.querySelector("#close")
+close.onclick = function() {
+  modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
 }
 
 document.querySelector("#home-button").onclick = function() {go_to_home()};
@@ -284,7 +313,6 @@ function setup_start_screen() {
         appliance_on_img.src = "../images/" + appliance.split(" ").join("") + "_on.gif";
     }
     else if (appliance === "toaster") {
-        // appliance_img.src = "../images/" + appliance.split(" ").join("") + "_layer_4.png";
         appliance_img.src = "../images/toaster_layer_4.png";
         appliance_on_img.src = "../images/toaster_layer_2.png";
     }
@@ -327,7 +355,6 @@ function setup_start_screen() {
             name.innerHTML = "Toaster";
             name.style.marginTop = "10vh";
             wattage.innerHTML = "850 W";
-            // appliance_img.style.height = "45%";
             appliance_img.id = "toaster-layer-4";
             appliance_on_img.id = "toaster-bread-2";
 
@@ -495,6 +522,7 @@ function setup_challenge_screen() {
 
 
 function begin_challenge() {
+    challenge_is_ongoing = true;
     if (mode === "Solo Mode") {
         // Time remaining and goal not yet reached 
         if (bicyclePower >= 0 && Math.round(bicyclePower *10 / 100) <= 100) {
@@ -570,7 +598,6 @@ function begin_challenge() {
         }
     }
 
-
     // Cooperation mode
     else {
         // Time remaining and the users have not reached the goal yet
@@ -620,6 +647,8 @@ function begin_challenge() {
  // ================================================= RESULTS SCREEN =================================================
 function show_results() {
 
+    challenge_is_ongoing = false;
+    
     if (display == "left") {
         disconnectBicycle(1);
     }
