@@ -76,10 +76,10 @@ const createWindow = () => {
         bluetoothPinCallback(response);
     });
 
-    rightWindow .webContents.session.setBluetoothPairingHandler((details, callback) => {
+    rightWindow.webContents.session.setBluetoothPairingHandler((details, callback) => {
         bluetoothPinCallback = callback;
         // Send a message to the renderer to prompt the user to confirm the pairing.
-        rightWindow .webContents.send("bluetooth-pairing-request", details);
+        rightWindow.webContents.send("bluetooth-pairing-request", details);
     });
 
 
@@ -157,6 +157,17 @@ const createWindow = () => {
             }
             else if (data[1] ===  "left") {
                 rightWindow.webContents.send("request-to-resume", [true]);
+            }
+        }
+    })
+
+    ipcMain.on("end-challenge", (event, data) => {
+        if (data[0] === true) {
+            if (data[1] === "right") {
+                leftWindow.webContents.send("request-to-end", [true]);
+            }
+            else if (data[1] ===  "left") {
+                rightWindow.webContents.send("request-to-end", [true]);
             }
         }
     })

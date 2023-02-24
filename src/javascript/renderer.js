@@ -69,7 +69,9 @@ function beginTimer() {
 
                 // Check if the other player has paused the challenge
                 if (mode === "Competition Mode" || mode === "Cooperation Mode") {
-                    var modal_two = document.querySelector("#modal-two")
+                    var modal_two = document.querySelector("#modal-two");
+                    var modal_three = document.querySelector("#modal-three");
+
                     ipcRenderer.on("request-to-pause", (event, data) => {
                         if (data[0] === true) {
                             timer_paused = true;  
@@ -80,6 +82,17 @@ function beginTimer() {
                                 if (data[0] === true) {
                                     timer_paused = false;
                                     modal_two.style.display = "none";     
+                                }
+                            })
+
+
+                             // Other player left the challenge 
+                             ipcRenderer.on("request-to-end", (event, data) => {
+                                if (data[0] === true) {
+                                    modal_two.style.display = "none";   
+                                    modal_three.style.display = "block";   
+                                    document.querySelector("#return_to_main_page").onclick = function() {go_to_home()};
+                                    document.querySelector("#setup_challenge_in_solo_mode").onclick = function() {duo_to_solo_challenge()};
                                 }
                             })
                         }
@@ -128,7 +141,8 @@ function beginTimer() {
 
                 // Check if the other player has paused the challenge
                 if (mode === "Competition Mode" || mode === "Cooperation Mode") {
-                    var modal_two = document.querySelector("#modal-two")
+                    var modal_two = document.querySelector("#modal-two");
+                    var modal_three = document.querySelector("#modal-three");
                     ipcRenderer.on("request-to-pause", (event, data) => {
                         if (data[0] === true) {
                             timer_paused = true;  
@@ -138,9 +152,20 @@ function beginTimer() {
                             ipcRenderer.on("request-to-resume", (event, data) => {
                                 if (data[0] === true) {
                                     timer_paused = false;
-                                    modal_two.style.display = "none";     
+                                    modal_two.style.display = "none";   
                                 }
                             })
+
+                            // Other player left the challenge 
+                            ipcRenderer.on("request-to-end", (event, data) => {
+                                if (data[0] === true) {
+                                    modal_two.style.display = "none";   
+                                    modal_three.style.display = "block";   
+                                    document.querySelector("#return_to_main_page").onclick = function() {go_to_home()};
+                                    document.querySelector("#setup_challenge_in_solo_mode").onclick = function() {duo_to_solo_challenge()};
+                                }
+                            })
+                            
                         }
                     });
                 }
@@ -175,6 +200,9 @@ function beginTimer() {
 document.querySelector("#back-arrow").onclick = function() {go_back()};
 function go_back() {
     if (challenge_is_ongoing) {
+        if (mode === "Competition Mode || Cooperation Mode") {
+            ipcRenderer.send("pause-challenge", [true, display]);
+        }
         pause_timer();
         modal.style.display = "block";
     }
@@ -182,6 +210,28 @@ function go_back() {
     else {
         location.href = "timer_duration_selection.html?appliance=" + appliance + "&mode=" + mode + "&display=" + display;
     }
+}
+
+document.querySelector("#yes-button").onclick = function() {
+    if (mode === "Competition Mode" || mode === "Cooperation Mode") {
+        ipcRenderer.send("end-challenge", [true, display]);    
+    }
+    location.href = "timer_duration_selection.html?appliance=" + appliance + "&mode=" + mode + "&display=" + display;
+};
+
+document.querySelector("#no-button").onclick = function() {
+    modal.style.display = "none";
+};
+
+var close = document.querySelector("#close")
+close.onclick = function() {
+  modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
 }
 
 function pause_timer() {
@@ -213,26 +263,6 @@ function pause_timer() {
         }
     }
 };
-
-
-document.querySelector("#yes-button").onclick = function() {
-    location.href = "timer_duration_selection.html?appliance=" + appliance + "&mode=" + mode + "&display=" + display;
-};
-
-document.querySelector("#no-button").onclick = function() {
-    modal.style.display = "none";
-};
-
-var close = document.querySelector("#close")
-close.onclick = function() {
-  modal.style.display = "none";
-}
-
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-}
 
 document.querySelector("#home-button").onclick = function() {go_to_home()};
 function go_to_home() {
@@ -580,3 +610,7 @@ function begin_challenge() {
         }
     }
 }
+
+function duo_to_solo_challenge() {
+    location.href = "start_screen.html?appliance=" + appliance + "&mode=Solo Mode" + "&duration=" + duration + "&display=" + display;
+};

@@ -677,3 +677,15 @@ body {
     text-decoration: none;
     cursor: pointer;
   }
+
+.modal-three-button {
+    background-color: #61AAFF;
+    color: white;
+    border: 5px solid #4D9FFF;
+    height: 75px;
+    width: 60%;
+    font-size: 35px;
+    border-radius: 20px;
+    margin: 45px auto;
+    display: block;
+}
