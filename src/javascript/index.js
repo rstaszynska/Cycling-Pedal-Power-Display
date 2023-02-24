@@ -8,7 +8,7 @@ if (require("electron-squirrel-startup")) {
 
 const createWindow = () => {
     // Create the browser window.
-    const mainWindow = new BrowserWindow({
+    const leftWindow = new BrowserWindow({
         width: 1250,
         height: 900,
         webPreferences: {
@@ -18,9 +18,9 @@ const createWindow = () => {
     });
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools();
+    leftWindow.webContents.openDevTools();
 
-    mainWindow.webContents.on("select-bluetooth-device", (event, deviceList, callback) => {
+    leftWindow.webContents.on("select-bluetooth-device", (event, deviceList, callback) => {
         event.preventDefault();
         if (deviceList && deviceList.length > 0) {
             callback(deviceList[0].deviceId);
@@ -32,17 +32,17 @@ const createWindow = () => {
         bluetoothPinCallback(response);
     });
 
-    mainWindow.webContents.session.setBluetoothPairingHandler((details, callback) => {
+    leftWindow.webContents.session.setBluetoothPairingHandler((details, callback) => {
         bluetoothPinCallback = callback;
         // Send a message to the renderer to prompt the user to confirm the pairing.
-        mainWindow.webContents.send("bluetooth-pairing-request", details);
+        leftWindow.webContents.send("bluetooth-pairing-request", details);
     });
 
     // and load the main html of the app.
-    mainWindow.loadFile(path.join(__dirname, "../templates/display_selection.html"));
+    leftWindow.loadFile(path.join(__dirname, "../templates/left_display.html"));
 
 
-    const win = new BrowserWindow({
+    const rightWindow = new BrowserWindow({
         width: 1250,
         height: 900,
         webPreferences: {
@@ -50,8 +50,8 @@ const createWindow = () => {
             contextIsolation: false,
         },
     });
-    win.webContents.openDevTools();
-    win.loadFile(path.join(__dirname, '../templates/display_selection.html'));
+    rightWindow.webContents.openDevTools();
+    rightWindow.loadFile(path.join(__dirname, '../templates/right_display.html'));
 
     // const largeDisplay = new BrowserWindow({
     //     width: 1250,
@@ -64,7 +64,7 @@ const createWindow = () => {
     // largeDisplay.loadFile(path.join(__dirname, '../templates/display_selection.html'));
     
 
-    win.webContents.on("select-bluetooth-device", (event, deviceList, callback) => {
+    rightWindow .webContents.on("select-bluetooth-device", (event, deviceList, callback) => {
         event.preventDefault();
         if (deviceList && deviceList.length > 0) {
             callback(deviceList[0].deviceId);
@@ -76,10 +76,10 @@ const createWindow = () => {
         bluetoothPinCallback(response);
     });
 
-    win.webContents.session.setBluetoothPairingHandler((details, callback) => {
+    rightWindow .webContents.session.setBluetoothPairingHandler((details, callback) => {
         bluetoothPinCallback = callback;
         // Send a message to the renderer to prompt the user to confirm the pairing.
-        win.webContents.send("bluetooth-pairing-request", details);
+        rightWindow .webContents.send("bluetooth-pairing-request", details);
     });
 
 
@@ -129,13 +129,36 @@ const createWindow = () => {
         
         var x = setInterval(function () {
             if (rightReady && leftReady) {
-                mainWindow.webContents.send("permission-to-begin", [true]);
-                win.webContents.send("permission-to-begin", [true]);
+                leftWindow.webContents.send("permission-to-begin", [true]);
+                rightWindow.webContents.send("permission-to-begin", [true]);
                 clearInterval(x);
                 leftReady = false;
                 rightReady = false;
             }
         }, 1000);
+    })
+
+
+    ipcMain.on("pause-challenge", (event, data) => {
+        if (data[0] === true) {
+            if (data[1] === "right") {
+                leftWindow.webContents.send("request-to-pause", [true]);
+            }
+            else if (data[1] ===  "left") {
+                rightWindow.webContents.send("request-to-pause", [true]);
+            }
+        }
+    })
+
+    ipcMain.on("resume-challenge", (event, data) => {
+        if (data[0] === true) {
+            if (data[1] === "right") {
+                leftWindow.webContents.send("request-to-resume", [true]);
+            }
+            else if (data[1] ===  "left") {
+                rightWindow.webContents.send("request-to-resume", [true]);
+            }
+        }
     })
 
 };
