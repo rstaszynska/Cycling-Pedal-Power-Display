@@ -1,5 +1,4 @@
 const {ipcRenderer} = require("electron");
-// const { clearInterval } = require("timers");
 require('events').EventEmitter.defaultMaxListeners = 100;
 
 var userWon = false;
@@ -18,6 +17,42 @@ let display = params.display;
 
 var timer_paused = false;
 var challenge_is_ongoing = false;
+var currentUserPercentage = 0;
+
+
+// Unique challenge goals for each appliance (in joules)
+var energyGoal = 0;
+
+// Takes two minutes for a 700W toaster to toast two slices
+// 700 x 120 seconds = 84000 Joules
+if (appliance === "toaster") {
+    energyGoal = 84000;
+}
+// 1L of water boiled in a 3000W kettle
+// = 0.113 kwh => 406800 joules (takes 135.6 seconds )
+else if (appliance === "kettle") {
+    energyGoal = 406800;
+}
+// 900 watt washing machine used for a 1 hour cycle = 0.9kwh = 3240000
+else if (appliance === "washing machine") {
+    energyGoal = 3240000;
+}
+
+// late 2016 macbook pro with touchbar has a 76 watt hour
+// and lasts 11 hours
+// meaning that one hour of usage typically uses about 6.9 watt hours = 0.0069 = 24840 joules
+else if (appliance === "laptop"){
+    energyGoal = 24840;
+}
+// 10 W for 1 hour = 0.01kwh or 36,000 joules
+else if (appliance === "led light bulb") {
+    energyGoal = 36000;
+}
+// 100 W for 1 hour = 360,000 joules
+else if (appliance === "incandescent light bulb") {
+    energyGoal = 360000;
+}
+
 
 
 setup_start_screen();
@@ -454,7 +489,7 @@ function setup_challenge_screen() {
         var score = document.createElement("p");
         score.id = "score-text";
         var scorePercentage = document.createElement("h1");
-        scorePercentage.id = "score-percentage";
+        scorePercentage.id = "opponent-score-percentage";
 
         if (mode === "Cooperation Mode") {   
             score.innerHTML = "PARTNER SCORE"; 
@@ -490,25 +525,32 @@ function setup_challenge_screen() {
 }
 
 
+
+function update_progress(percentage) {
+    var angle = percentage * 0.01 * 360;
+    document.querySelector("#progress-circle").style.background =
+        "radial-gradient(" +
+        background_color +
+        " 50%, transparent 51%), conic-gradient(black 0deg " +
+        angle +
+        "deg, " +
+        secondary_color +
+        " " +
+        (angle + 1) +
+        "deg 360deg)";
+    document.querySelector("#progress-percentage").innerHTML = percentage + "%";
+}
+
 function begin_challenge() {
+
     challenge_is_ongoing = true;
+    currentUserPercentage = Math.round((bicyclePower / energyGoal * 100) / 100);
+
     if (mode === "Solo Mode") {
         // Time remaining and goal not yet reached 
-        if (bicyclePower >= 0 && Math.round(bicyclePower *10 / 100) <= 100) {
+        if (bicyclePower >= 0 && currentUserPercentage <= 100) {
             // Update progress circle and percentage
-            var percentage = Math.round(bicyclePower *10 / 100);
-            angle = percentage * 0.01 * 360;
-            document.querySelector("#progress-circle").style.background =
-                "radial-gradient(" +
-                background_color +
-                " 50%, transparent 51%), conic-gradient(black 0deg " +
-                angle +
-                "deg, " +
-                secondary_color +
-                " " +
-                (angle + 1) +
-                "deg 360deg)";
-            document.querySelector("#progress-percentage").innerHTML = Math.round(percentage) + "%";
+            update_progress(currentUserPercentage);
         }
 
         // Time remaining and goal reached
@@ -522,21 +564,9 @@ function begin_challenge() {
 
         // Time remaining and no user has reached the goal yet
         if (!userWon || !opponentWon) {
-            
+
             // Update progress circle and percentage
-            var percentage = Math.round(bicyclePower *10 / 100);
-            angle = percentage * 0.01 * 360;
-            document.querySelector("#progress-circle").style.background =
-                "radial-gradient(" +
-                background_color +
-                " 50%, transparent 51%), conic-gradient(black 0deg " +
-                angle +
-                "deg, " +
-                secondary_color +
-                " " +
-                (angle + 1) +
-                "deg 360deg)";
-            document.querySelector("#progress-percentage").innerHTML = Math.round(percentage) + "%";
+            update_progress(currentUserPercentage);
         
             // Display opponent stats
             if (display === "left") {
@@ -551,17 +581,17 @@ function begin_challenge() {
                     opponentScore = data[0];
                 })
             }
-            document.querySelector("#score-percentage").innerHTML = Math.round(opponentScore*10 / 100) + "%";
+            document.querySelector("#opponent-score-percentage").innerHTML = Math.round(opponentScore / energyGoal * 100) + "%";
         }
 
         // Check if the current user won
-        if (Math.round(bicyclePower *10 / 100) >= 100) {
+        if (currentUserPercentage >= 100) {
             userWon = true;
             show_results();
         }
 
         // Check if the opponent won
-        if (Math.round(opponentScore*10 / 100) >= 100) {
+        if (Math.round(opponentScore / energyGoal * 100) >= 100) {
             opponentWon = true;
             show_results();
         }
@@ -585,26 +615,14 @@ function begin_challenge() {
                     opponentScore = data[0];
                 })
             }
-            document.querySelector("#user-score-percentage").innerHTML = Math.round(bicyclePower*10 / 100) + "%";
-            document.querySelector("#score-percentage").innerHTML = Math.round(opponentScore*10 / 100) + "%";
+            document.querySelector("#user-score-percentage").innerHTML = currentUserPercentage + "%";
+            document.querySelector("#opponent-score-percentage").innerHTML = Math.round(opponentScore / energyGoal * 100) + "%";
             
             // Update progress circle and percentage
-            var percentage = Math.round((bicyclePower + opponentScore) *10 / 100);
-            angle = percentage * 0.01 * 360;
-            document.querySelector("#progress-circle").style.background =
-                "radial-gradient(" +
-                background_color +
-                " 50%, transparent 51%), conic-gradient(black 0deg " +
-                angle +
-                "deg, " +
-                secondary_color +
-                " " +
-                (angle + 1) +
-                "deg 360deg)";
-            document.querySelector("#progress-percentage").innerHTML = Math.round(percentage) + "%";
+            update_progress(Math.round((bicyclePower + opponentScore) / energyGoal * 100));
         }
 
-        if ((bicyclePower + opponentScore) *10 / 100 >= 100) {
+        if ((bicyclePower + opponentScore) / energyGoal * 100 >= 100) {
             commonGoalReached = true;
             show_results();
         }
