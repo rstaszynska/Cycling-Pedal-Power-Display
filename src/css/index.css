@@ -327,15 +327,27 @@ body {
     src: url("../fonts/K2D/K2D-Light.ttf");
 }
 
-#timer-label, #score-text {
+#timer-label, #score-text  {
     font-size: 25px !important;
     font-family: K2DLight;
 }
 
-#timer {
+#timer{
     font-size: 75px !important;
     font-family: K2DBold;
     margin-top: -30px !important;
+}
+
+#power-label {
+    font-family: K2DLight;
+    font-size: 22.5px !important;
+    margin-top: 17.5vh;
+}
+
+#power {
+    font-family: K2DBold;
+    font-size: 27.5px !important;
+    margin-top: -2vh;
 }
 
 #progress-circle {
@@ -343,7 +355,7 @@ body {
     width: 41vh;
     height: 41vh;
     margin: 0 auto;
-    margin-top: 10vh;
+    margin-top: 5vh;
 }
 
 #progress-text {
