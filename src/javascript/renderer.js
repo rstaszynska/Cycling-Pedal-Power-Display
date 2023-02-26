@@ -1,6 +1,7 @@
 const {ipcRenderer} = require("electron");
 require('events').EventEmitter.defaultMaxListeners = 100;
 
+
 var userWon = false;
 var opponentWon = false;
 var goalReached = false;
@@ -42,18 +43,15 @@ else if (appliance === "washing machine") {
 // and lasts 11 hours
 // meaning that one hour of usage typically uses about 6.9 watt hours = 0.0069 = 24840 joules
 else if (appliance === "laptop"){
-    // * 10 hours for testing
-    energyGoal = 24840 * 10;
+    energyGoal = 24840;
 }
 // 10 W for 1 hour = 0.01kwh or 36,000 joules
 else if (appliance === "led light bulb") {
-     // * 10 hours for testing
-    energyGoal = 36000 * 10;
+    energyGoal = 36000;
 }
 // 100 W for 1 hour = 360,000 joules
 else if (appliance === "incandescent light bulb") {
-    // * 10 hours for testing
-    energyGoal = 360000 * 10;
+    energyGoal = 360000;
 }
 
 
@@ -435,13 +433,13 @@ function setup_challenge_screen() {
         heading.innerHTML = "Can you run one laundry cycle (1 hour)?"
     }
     else if (appliance === "laptop"){
-        heading.innerHTML = "Can you keep a laptop running for 10 hours?"; // test duration
+        heading.innerHTML = "Can you keep a laptop running for one hour?";
     }
     else if (appliance === "led light bulb") {
-        heading.innerHTML = "Can you keep the light on for 10 hours?"; // test duration
+        heading.innerHTML = "Can you keep the light on for one hour?"; 
     }
     else if (appliance === "incandescent light bulb") {
-        heading.innerHTML = "Can you keep the light on for 10 hours?"; // test duration
+        heading.innerHTML = "Can you keep the light on for one hour?";
     }
 
     
@@ -562,7 +560,7 @@ function update_progress(percentage) {
 function begin_challenge() {
 
     challenge_is_ongoing = true;
-    currentUserPercentage = Math.round((bicyclePower / energyGoal * 100) / 100);
+    currentUserPercentage = Math.round(bicyclePower / energyGoal * 100);
 
     if (mode === "Solo Mode") {
         // Time remaining and goal not yet reached 
@@ -650,3 +648,5 @@ function begin_challenge() {
 function duo_to_solo_challenge() {
     location.href = "start_screen.html?appliance=" + appliance + "&mode=Solo Mode" + "&duration=" + duration + "&display=" + display;
 };
+
+

@@ -32,7 +32,7 @@ if (appliance === "led light bulb" || appliance === "kettle" || appliance === "l
         wattage.innerHTML = "Wattage: <b>10 W</b>";
         cost.innerHTML = "Cost per ten hours of usage: <b>£" + costValue + "</b>";
         emissions.innerHTML = "CO₂e emissions per ten hours of usage: <b>" + emissionsValue + " grams</b>";
-        question.innerHTML = "Do you think you can keep the light on for 10 hours?";
+        question.innerHTML = "Do you think you can keep the light on for one hour?";
 
     } else if (appliance === "kettle") {
         energyRequired = 406800;
@@ -58,7 +58,7 @@ if (appliance === "led light bulb" || appliance === "kettle" || appliance === "l
         wattage.innerHTML = "Wattage (when idle): <b>6.9 W</b>";
         cost.innerHTML = "Cost per one hour of usage: <b>£" + costValue + "</b>";
         emissions.innerHTML = "CO₂e emissions per one hour of usage: <b>" + emissionsValue + " grams</b>";
-        question.innerHTML = "Do you think you can keep a laptop running for 10 hours?";
+        question.innerHTML = "Do you think you can keep a laptop running for one hour?";
         appliance_img.style.height = "60%";
         appliance_img.style.marginTop = "30%";
     }
@@ -86,7 +86,7 @@ else {
         wattage.innerHTML = "Wattage: <b>100 W</b>";
         cost.innerHTML = "Cost per ten hours of usage: <b>£" + costValue + "</b>";
         emissions.innerHTML = "CO₂e emissions per ten hours of usage: <b>" + emissionsValue + " grams</b>";
-        question.innerHTML = "Do you think you can keep the light on for 10 hours?";
+        question.innerHTML = "Do you think you can keep the light on for one hour?";
 
     } else if (appliance === "toaster") {
         energyRequired = 84000;
