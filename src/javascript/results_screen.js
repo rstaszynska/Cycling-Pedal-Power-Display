@@ -68,6 +68,8 @@ function show_results() {
     var subheading = document.querySelector("#subheading");
     document.querySelector("#progress-text").remove();
     document.querySelector("#progress-circle").remove();
+    document.querySelector("#power-label").remove();
+    document.querySelector("#power").remove();
     var resultText = document.createElement("p");
     resultText.id = "results-text";
 
@@ -102,25 +104,25 @@ function show_results() {
         if (goalReached) {
             // Solo mode, player won
             heading.innerHTML = "Goal reached!";
-            subheading.innerHTML = "You generated 100% of the required power!";
+            subheading.innerHTML = "You generated 100% of the required energy!";
             resultText.innerHTML = "You were able to generate enough energy to run the " + appliance + " for "+ applianceEnergyDuration + "! That's a total of <b>" + energyGeneratedkWh + " kWh</b>! Well done! <br><br>";
         }
         else if (userWon) {
             // Duo mode, player won
             heading.innerHTML = "You won the challenge!";
-            subheading.innerHTML = "You generated 100% of the required power!";
+            subheading.innerHTML = "You generated 100% of the required energy!";
             resultText.innerHTML = "You were able to generate enough energy to run the " + appliance + " for " + applianceEnergyDuration + "! That's a total of <b>" + energyGeneratedkWh + " kWh</b>! Well done! <br><br>";
         }
         else if (opponentWon) {
             // Duo mode, opponent won
             heading.innerHTML = "Your opponent won the challenge";
-            subheading.innerHTML = "But you managed to generate " + currentUserPercentage + "% of the required power!";
+            subheading.innerHTML = "But you managed to generate " + currentUserPercentage + "% of the required energy!";
             resultText.innerHTML = "You weren't able to generate enough energy to run the " + appliance + " for " + applianceEnergyDuration + ", but you generated <b>" + energyGeneratedkWh + " kWh</b>, which is enough to run it for <b>" + generatedEnergyDuration + "</b>! Nice try! <br><br>";
         }
         else if (commonGoalReached){
             // Duo cooperative mode, goal reached
             heading.innerHTML = "Goal reached!";
-            subheading.innerHTML = "Together, you generated 100% of the required power!";
+            subheading.innerHTML = "Together, you generated 100% of the required energy!";
             resultText.innerHTML = "You were able to generate enough energy to run the " + appliance + " for " + applianceEnergyDuration + "! That's a total of <b>" + (energyGeneratedkWh) + "  kWh</b>! Great teamwork! <br><br>";
         }
     }
@@ -130,6 +132,7 @@ function show_results() {
     
     var retryButton = document.querySelector("#button");
     retryButton.innerHTML = "RETRY";
+    retryButton.style.marginTop = "55%";
     retryButton.onclick = function () {
         location.href = "start_screen.html?appliance=" + appliance + "&mode=" + mode + "&duration=" + duration + "&display=" + display;
     }

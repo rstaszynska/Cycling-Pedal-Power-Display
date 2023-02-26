@@ -460,7 +460,7 @@ function setup_challenge_screen() {
     progressText.appendChild(progressPercentage);
 
     var percentageDescriptor = document.createElement("p");
-    percentageDescriptor.innerHTML = "of power generated";
+    percentageDescriptor.innerHTML = "of energy generated";
     progressText.appendChild(percentageDescriptor);
 
     document.querySelector("#middle").appendChild(progressCircle);
@@ -482,20 +482,18 @@ function setup_challenge_screen() {
     }
     timer.id = "timer";
 
-
-
     var powerLabel = document.createElement("p");
     powerLabel.id = "power-label";
+    powerLabel.innerHTML = "INSTANTANEOUS POWER";
     var power = document.createElement("p");
     power.id = "power";
-
 
     var pauseButton = document.createElement("button");
     pauseButton.style.marginTop = "30px";
     pauseButton.innerHTML = "PAUSE";
     pauseButton.id = "button";
     if (mode ==="Solo Mode") {
-        pauseButton.style.marginTop = "45%";
+        pauseButton.style.marginTop = "55%";
     }
     else {
         pauseButton.style.marginLeft = "10%";
@@ -544,11 +542,13 @@ function setup_challenge_screen() {
     }
 
     document.getElementById("right").appendChild(pauseButton);
+    document.getElementById("middle").appendChild(powerLabel);
+    document.getElementById("middle").appendChild(power);
 }
 
 
 
-function update_progress(percentage) {
+function update_progress(percentage, instantaneousPower) {
     var angle = percentage * 0.01 * 360;
     document.querySelector("#progress-circle").style.background =
         "radial-gradient(" +
@@ -561,6 +561,7 @@ function update_progress(percentage) {
         (angle + 1) +
         "deg 360deg)";
     document.querySelector("#progress-percentage").innerHTML = percentage + "%";
+    document.querySelector("#power").innerHTML = instantaneousPower + " W";
 }
 
 function begin_challenge() {
@@ -572,7 +573,7 @@ function begin_challenge() {
         // Time remaining and goal not yet reached 
         if (energyInJoules >= 0 && currentUserPercentage <= 100) {
             // Update progress circle and percentage
-            update_progress(currentUserPercentage);
+            update_progress(currentUserPercentage, instantaneousPower);
         }
 
         // Time remaining and goal reached
@@ -588,7 +589,7 @@ function begin_challenge() {
         if (!userWon || !opponentWon) {
 
             // Update progress circle and percentage
-            update_progress(currentUserPercentage);
+            update_progress(currentUserPercentage, instantaneousPower);
         
             // Display opponent stats
             if (display === "left") {
@@ -640,7 +641,7 @@ function begin_challenge() {
             document.querySelector("#opponent-score-percentage").innerHTML = Math.round(opponentEnergyInJoules / energyGoal * 100) + "%";
             
             // Update progress circle and percentage
-            update_progress(Math.round((energyInJoules + opponentEnergyInJoules) / energyGoal * 100));
+            update_progress(Math.round((energyInJoules + opponentEnergyInJoules) / energyGoal * 100), instantaneousPower);
         }
 
         if ((energyInJoules + opponentEnergyInJoules) / energyGoal * 100 >= 100) {
