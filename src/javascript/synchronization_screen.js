@@ -60,7 +60,7 @@ function setup_start_screen() {
         } else if (appliance === "laptop") {
             name.innerHTML = "Laptop";
             name.style.marginTop = "10vh";
-            wattage.innerHTML = "430 W";
+            wattage.innerHTML = "6.9 W";
             appliance_img.style.height = "50%";
             appliance_img.style.marginLeft= "10%";
         }
@@ -74,7 +74,7 @@ function setup_start_screen() {
         } else if (appliance === "toaster") {
             name.innerHTML = "Toaster";
             name.style.marginTop = "10vh";
-            wattage.innerHTML = "850 W";
+            wattage.innerHTML = "700 W";
             appliance_img.style.height = "45%";
         } else if (appliance === "washing machine") {
             name.innerHTML = "Washing Machine";

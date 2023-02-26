@@ -28,7 +28,7 @@ function show_results() {
         applianceEnergyDurationInSeconds = 120;
     }
     else if (appliance === "kettle") {
-        applianceEnergyDuration = "about 2 minutes 15 seconds (time required to boil 1 litre of water)";
+        applianceEnergyDuration = "2 minutes and 15 seconds (time required to boil 1 litre of water)";
         applianceEnergyDurationInSeconds = 135.6;
     }
     else if (appliance === "washing machine") {
@@ -36,16 +36,16 @@ function show_results() {
         applianceEnergyDurationInSeconds = 3600;
     }
     else if (appliance === "laptop"){
-        applianceEnergyDuration = "one hour";
-        applianceEnergyDurationInSeconds = 3600;
+        applianceEnergyDuration = "ten hours";
+        applianceEnergyDurationInSeconds = 3600 * 10;
     }
     else if (appliance === "led light bulb") {
-        applianceEnergyDuration = "one hour";
-        applianceEnergyDurationInSeconds = 3600;
+        applianceEnergyDuration = "ten hours";
+        applianceEnergyDurationInSeconds = 3600 * 10;
     }
     else if (appliance === "incandescent light bulb") {
-        applianceEnergyDuration = "one hour";
-        applianceEnergyDurationInSeconds = 3600;
+        applianceEnergyDuration = "ten hours";
+        applianceEnergyDurationInSeconds = 3600 * 10;
     }
 
     var energyDurationInSeconds = (bicyclePower / energyGoal) * applianceEnergyDurationInSeconds;

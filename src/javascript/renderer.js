@@ -42,15 +42,18 @@ else if (appliance === "washing machine") {
 // and lasts 11 hours
 // meaning that one hour of usage typically uses about 6.9 watt hours = 0.0069 = 24840 joules
 else if (appliance === "laptop"){
-    energyGoal = 24840;
+    // * 10 hours for testing
+    energyGoal = 24840 * 10;
 }
 // 10 W for 1 hour = 0.01kwh or 36,000 joules
 else if (appliance === "led light bulb") {
-    energyGoal = 36000;
+     // * 10 hours for testing
+    energyGoal = 36000 * 10;
 }
 // 100 W for 1 hour = 360,000 joules
 else if (appliance === "incandescent light bulb") {
-    energyGoal = 360000;
+    // * 10 hours for testing
+    energyGoal = 360000 * 10;
 }
 
 
@@ -347,7 +350,7 @@ function setup_start_screen() {
         } else if (appliance === "laptop") {
             name.innerHTML = "Laptop";
             name.style.marginTop = "10vh";
-            wattage.innerHTML = "430 W";
+            wattage.innerHTML = "6.9 W";
             appliance_img.style.height = "50%";
             appliance_img.style.marginLeft= "10%";
             appliance_on_img.id = "laptop-screen";
@@ -366,7 +369,7 @@ function setup_start_screen() {
         } else if (appliance === "toaster") {
             name.innerHTML = "Toaster";
             name.style.marginTop = "10vh";
-            wattage.innerHTML = "850 W";
+            wattage.innerHTML = "700 W";
             appliance_img.id = "toaster-layer-4";
             appliance_on_img.id = "toaster-bread-2";
 
@@ -422,12 +425,27 @@ function setup_start_screen() {
 function setup_challenge_screen() {
     document.querySelectorAll(".start-screen-element").forEach((element) => element.remove());
 
-    if (appliance === "led light bulb" || appliance === "incandescent") {
-        heading.innerHTML = "Can you power an " + appliance + " ?";
-    } else {
-        heading.innerHTML = "Can you power a " + appliance + "?";
+    if (appliance === "toaster") {
+        heading.innerHTML = "Can you toast two slices of bread?";
     }
-    subheading.innerHTML = "Cycle to generate electricity";
+    else if (appliance === "kettle") {
+        heading.innerHTML = "Can you boil 1 litre of water from room temperature?";
+    }
+    else if (appliance === "washing machine") {
+        heading.innerHTML = "Can you run one laundry cycle (1 hour)?"
+    }
+    else if (appliance === "laptop"){
+        heading.innerHTML = "Can you keep a laptop running for 10 hours?"; // test duration
+    }
+    else if (appliance === "led light bulb") {
+        heading.innerHTML = "Can you keep the light on for 10 hours?"; // test duration
+    }
+    else if (appliance === "incandescent light bulb") {
+        heading.innerHTML = "Can you keep the light on for 10 hours?"; // test duration
+    }
+
+    
+    subheading.innerHTML = "Cycle to generate energy";
 
     document.querySelector(".left").style.opacity = "100%";
 
