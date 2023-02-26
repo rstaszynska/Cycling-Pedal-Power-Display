@@ -83,12 +83,12 @@ const createWindow = () => {
     });
 
 
-    var rightBicyclePower = 0;
+    var rightBicycleEnergy = 0;
     var rightBicycleMode;
     var rightBicycleDuration;
     var rightBicycleAppliance;
 
-    var leftBicyclePower = 0;
+    var leftBicycleEnergy = 0;
     var leftBicycleMode;
     var leftBicycleDuration;
     var leftBicycleAppliance;
@@ -97,13 +97,13 @@ const createWindow = () => {
     var rightReady;
 
     ipcMain.on("get-right-bicycle-power", (events, data) => {
-        leftBicyclePower = data[0];
-        events.sender.send("updated-right-bicycle-stats", [rightBicyclePower]);
+        leftBicycleEnergy = data[0];
+        events.sender.send("updated-right-bicycle-stats", [rightBicycleEnergy]);
     })
 
     ipcMain.on("get-left-bicycle-power", (events, data) => {
-        rightBicyclePower = data[0];
-        events.sender.send("updated-left-bicycle-stats", [leftBicyclePower]);
+        rightBicycleEnergy = data[0];
+        events.sender.send("updated-left-bicycle-stats", [leftBicycleEnergy]);
     })
 
     ipcMain.on("get-right-bicycle-settings", (event, data) => {

@@ -1,7 +1,7 @@
 const {ipcRenderer} = require("electron");
 require('events').EventEmitter.defaultMaxListeners = 100;
 
-
+var opponentEnergyInJoules = 0;
 var userWon = false;
 var opponentWon = false;
 var goalReached = false;
@@ -85,8 +85,6 @@ function start() {
         beginTimer();
     }
 }
-
-var opponentScore = 0;
 
 function beginTimer() {
 
@@ -484,6 +482,14 @@ function setup_challenge_screen() {
     }
     timer.id = "timer";
 
+
+
+    var powerLabel = document.createElement("p");
+    powerLabel.id = "power-label";
+    var power = document.createElement("p");
+    power.id = "power";
+
+
     var pauseButton = document.createElement("button");
     pauseButton.style.marginTop = "30px";
     pauseButton.innerHTML = "PAUSE";
@@ -560,11 +566,11 @@ function update_progress(percentage) {
 function begin_challenge() {
 
     challenge_is_ongoing = true;
-    currentUserPercentage = Math.round(bicyclePower / energyGoal * 100);
+    currentUserPercentage = Math.round(energyInJoules / energyGoal * 100);
 
     if (mode === "Solo Mode") {
         // Time remaining and goal not yet reached 
-        if (bicyclePower >= 0 && currentUserPercentage <= 100) {
+        if (energyInJoules >= 0 && currentUserPercentage <= 100) {
             // Update progress circle and percentage
             update_progress(currentUserPercentage);
         }
@@ -586,18 +592,18 @@ function begin_challenge() {
         
             // Display opponent stats
             if (display === "left") {
-                ipcRenderer.send("get-right-bicycle-power", [Math.round(bicyclePower)]);
+                ipcRenderer.send("get-right-bicycle-power", [Math.round(energyInJoules)]);
                 ipcRenderer.on("updated-right-bicycle-stats", (event, data) => {
-                    opponentScore = data[0];
+                    opponentEnergyInJoules = data[0];
                 })
             }
             else {
-                ipcRenderer.send("get-left-bicycle-power", [Math.round(bicyclePower)]);
+                ipcRenderer.send("get-left-bicycle-power", [Math.round(energyInJoules)]);
                 ipcRenderer.on("updated-left-bicycle-stats", (event, data) => {
-                    opponentScore = data[0];
+                    opponentEnergyInJoules = data[0];
                 })
             }
-            document.querySelector("#opponent-score-percentage").innerHTML = Math.round(opponentScore / energyGoal * 100) + "%";
+            document.querySelector("#opponent-score-percentage").innerHTML = Math.round(opponentEnergyInJoules / energyGoal * 100) + "%";
         }
 
         // Check if the current user won
@@ -607,7 +613,7 @@ function begin_challenge() {
         }
 
         // Check if the opponent won
-        if (Math.round(opponentScore / energyGoal * 100) >= 100) {
+        if (Math.round(opponentEnergyInJoules / energyGoal * 100) >= 100) {
             opponentWon = true;
             show_results();
         }
@@ -617,28 +623,27 @@ function begin_challenge() {
     else {
         // Time remaining and the users have not reached the goal yet
         if (!commonGoalReached) {
-
             // Get stats from cooperator
             if (display === "left") {
-                ipcRenderer.send("get-right-bicycle-power", [Math.round(bicyclePower)]);
+                ipcRenderer.send("get-right-bicycle-power", [Math.round(energyInJoules)]);
                 ipcRenderer.on("updated-right-bicycle-stats", (event, data) => {
-                    opponentScore = data[0];
+                    opponentEnergyInJoules = data[0];
                 })
             }
             else {
-                ipcRenderer.send("get-left-bicycle-power", [Math.round(bicyclePower)]);
+                ipcRenderer.send("get-left-bicycle-power", [Math.round(energyInJoules)]);
                 ipcRenderer.on("updated-left-bicycle-stats", (event, data) => {
-                    opponentScore = data[0];
+                    opponentEnergyInJoules = data[0];
                 })
             }
             document.querySelector("#user-score-percentage").innerHTML = currentUserPercentage + "%";
-            document.querySelector("#opponent-score-percentage").innerHTML = Math.round(opponentScore / energyGoal * 100) + "%";
+            document.querySelector("#opponent-score-percentage").innerHTML = Math.round(opponentEnergyInJoules / energyGoal * 100) + "%";
             
             // Update progress circle and percentage
-            update_progress(Math.round((bicyclePower + opponentScore) / energyGoal * 100));
+            update_progress(Math.round((energyInJoules + opponentEnergyInJoules) / energyGoal * 100));
         }
 
-        if ((bicyclePower + opponentScore) / energyGoal * 100 >= 100) {
+        if ((energyInJoules + opponentEnergyInJoules) / energyGoal * 100 >= 100) {
             commonGoalReached = true;
             show_results();
         }

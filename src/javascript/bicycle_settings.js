@@ -3,7 +3,8 @@
     Project: PedalPower https://github.com/Tankiolegend/PedalPower
 */
 
-var bicyclePower = 0;
+var energyInJoules = 0;
+var instantaneousPower = 0;
 
 class Bicycle {
     device;
@@ -113,6 +114,6 @@ async function disconnectBicycle(bicycleNumber) {
 }
 
 function testChange(event) {
-    power = event.target.value.getUint8(2, true);
-    bicyclePower += power;
+    instantaneousPower = event.target.value.getUint8(2, true);
+    energyInJoules  += instantaneousPower;
 }
