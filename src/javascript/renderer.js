@@ -20,6 +20,8 @@ var timer_paused = false;
 var challenge_is_ongoing = false;
 var currentUserPercentage = 0;
 
+var challenge_setup_complete = false;
+
 
 // Unique challenge goals for each appliance (in joules)
 var energyGoal = 0;
@@ -69,7 +71,9 @@ function start() {
             else if (display === "right") {
                 connectBicycle(2);
             } 
-            setup_challenge_screen();
+            if (!challenge_setup_complete) {
+                setup_challenge_screen();
+            }
             beginTimer();
         })
     }
@@ -81,7 +85,9 @@ function start() {
         else if (display === "right") {
             connectBicycle(2); 
         } 
-        setup_challenge_screen();
+        if (!challenge_setup_complete) {
+            setup_challenge_screen();
+        }
         beginTimer();
     }
 }
@@ -544,6 +550,8 @@ function setup_challenge_screen() {
     document.getElementById("right").appendChild(pauseButton);
     document.getElementById("middle").appendChild(powerLabel);
     document.getElementById("middle").appendChild(power);
+
+    challenge_setup_complete = true;
 }
 
 
