@@ -365,8 +365,8 @@ body {
 }
 
 #progress-percentage {
-    font-size: 80px;
-    margin-top: 25%;
+    font-size: 65px;
+    margin-top: 30%;
     margin-bottom: 0;
 }
 
@@ -385,21 +385,47 @@ body {
     margin-top: 30%;
 }
 
+#admin-mode {
+    position: fixed;
+    margin-left: -80px;
+    margin-top: -40px;
+    background-color: #999999;
+    color: white;
+    width: 250px;
+}
+
 .display-selection {
     width: 90vw;
     display: flex;
-    margin: 0 auto;
+    margin: -15px auto;
     justify-content: center;
 }
 
 .display {
-    height: 45vh;
-    width: 50vw;
-    margin: 0 1.5vw;
+    height: 65vh;
+    width: 45vw;
+    margin: 0 auto;
     text-align: center;
     background: #ffffff;
     border: 5px solid #f3f3f3;
     border-radius: 50px;
+}
+
+#display-selection-continue-button {
+    margin-top: 5%;
+    background-color: #7e7e7e;
+    color: white;
+    border: 5px solid #585858;
+    height: 80px;
+    width: 300px;
+    font-size: 50px;
+    border-radius: 20px; 
+}
+
+#university-logo {
+    position: fixed;
+    margin-top: 90px;
+    margin-left: 10px;
 }
 
 .outer {
@@ -424,7 +450,7 @@ body {
 }
 
 .inner-left img {
-    margin-top: 30%;
+    margin-top: 37.5%;
     height: 85vh;
 }
 
@@ -440,6 +466,8 @@ body {
 .inner-right h1 {
     font-weight: 700;
     font-size: 70px;
+    width: 90%;
+    margin-left: 4%;
 }
 
 .inner-right h2 {

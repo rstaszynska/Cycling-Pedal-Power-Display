@@ -462,7 +462,7 @@ function setup_challenge_screen() {
 
     var progressPercentage = document.createElement("p");
     progressPercentage.id = "progress-percentage";
-    progressPercentage.innerHTML = 0 + "%";
+    progressPercentage.innerHTML = "0.00" + "%";
     progressText.appendChild(progressPercentage);
 
     var percentageDescriptor = document.createElement("p");
@@ -493,6 +493,7 @@ function setup_challenge_screen() {
     powerLabel.innerHTML = "INSTANTANEOUS POWER";
     var power = document.createElement("p");
     power.id = "power";
+    power.innerHTML = "0 W";
 
     var pauseButton = document.createElement("button");
     pauseButton.style.marginTop = "30px";
