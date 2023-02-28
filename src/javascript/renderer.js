@@ -575,7 +575,7 @@ function update_progress(percentage, instantaneousPower) {
 function begin_challenge() {
 
     challenge_is_ongoing = true;
-    currentUserPercentage = Math.round(energyInJoules / energyGoal * 100);
+    currentUserPercentage = (energyInJoules / energyGoal * 100).toFixed(2);
 
     if (mode === "Solo Mode") {
         // Time remaining and goal not yet reached 
@@ -601,18 +601,18 @@ function begin_challenge() {
         
             // Display opponent stats
             if (display === "left") {
-                ipcRenderer.send("get-right-bicycle-power", [Math.round(energyInJoules)]);
+                ipcRenderer.send("get-right-bicycle-power", [energyInJoules.toFixed(2)]);
                 ipcRenderer.on("updated-right-bicycle-stats", (event, data) => {
                     opponentEnergyInJoules = data[0];
                 })
             }
             else {
-                ipcRenderer.send("get-left-bicycle-power", [Math.round(energyInJoules)]);
+                ipcRenderer.send("get-left-bicycle-power", [energyInJoules.toFixed(2)]);
                 ipcRenderer.on("updated-left-bicycle-stats", (event, data) => {
                     opponentEnergyInJoules = data[0];
                 })
             }
-            document.querySelector("#opponent-score-percentage").innerHTML = Math.round(opponentEnergyInJoules / energyGoal * 100) + "%";
+            document.querySelector("#opponent-score-percentage").innerHTML = (opponentEnergyInJoules / energyGoal * 100).toFixed(2) + "%";
         }
 
         // Check if the current user won
@@ -622,7 +622,7 @@ function begin_challenge() {
         }
 
         // Check if the opponent won
-        if (Math.round(opponentEnergyInJoules / energyGoal * 100) >= 100) {
+        if ((opponentEnergyInJoules / energyGoal * 100).toFixed(2) >= 100) {
             opponentWon = true;
             show_results();
         }
@@ -634,22 +634,22 @@ function begin_challenge() {
         if (!commonGoalReached) {
             // Get stats from cooperator
             if (display === "left") {
-                ipcRenderer.send("get-right-bicycle-power", [Math.round(energyInJoules)]);
+                ipcRenderer.send("get-right-bicycle-power", [energyInJoules.toFixed(2)]);
                 ipcRenderer.on("updated-right-bicycle-stats", (event, data) => {
                     opponentEnergyInJoules = data[0];
                 })
             }
             else {
-                ipcRenderer.send("get-left-bicycle-power", [Math.round(energyInJoules)]);
+                ipcRenderer.send("get-left-bicycle-power", [energyInJoules.toFixed(2)]);
                 ipcRenderer.on("updated-left-bicycle-stats", (event, data) => {
                     opponentEnergyInJoules = data[0];
                 })
             }
             document.querySelector("#user-score-percentage").innerHTML = currentUserPercentage + "%";
-            document.querySelector("#opponent-score-percentage").innerHTML = Math.round(opponentEnergyInJoules / energyGoal * 100) + "%";
+            document.querySelector("#opponent-score-percentage").innerHTML = (opponentEnergyInJoules / energyGoal * 100).toFixed(2) + "%";
             
             // Update progress circle and percentage
-            update_progress(Math.round((energyInJoules + opponentEnergyInJoules) / energyGoal * 100), instantaneousPower);
+            update_progress(((energyInJoules + opponentEnergyInJoules) / energyGoal * 100).toFixed(2), instantaneousPower);
         }
 
         if ((energyInJoules + opponentEnergyInJoules) / energyGoal * 100 >= 100) {
