@@ -5,6 +5,8 @@
 
 var energyInJoules = 0;
 var instantaneousPower = 0;
+var leftBicycleConnected = false;
+var rightBicycleConnected = false;
 
 class Bicycle {
     device;
@@ -79,11 +81,13 @@ async function connectBicycle(bicycleNumber) {
     if (bicycleNumber === 1) {
         await deviceOne.connectBicycle("Tacx Flux 27168", 1);
         console.log("Bike 1 connected") 
+        leftBicycleConnected = true;
     } 
     
     else if  (bicycleNumber === 2) {
         await deviceTwo.connectBicycle("Tacx Flux 27280", 2);
         console.log("Bike 2 connected") 
+        rightBicycleConnected = true;
     }
 }
 

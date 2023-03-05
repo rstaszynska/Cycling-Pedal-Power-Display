@@ -20,13 +20,11 @@ document.querySelector(".continue").onclick = function() {synchronize()};
 
 document.querySelector("#back-arrow").onclick = function() {go_back()};
 function go_back() {
-    // clearInterval(x);
     location.href = "timer_duration_selection.html?appliance=" + appliance + "&mode=" + mode + "&display=" + display;
 }
 
 document.querySelector("#home-button").onclick = function() {go_to_home()};
 function go_to_home() {
-    // clearInterval(x);
     location.href = "appliance_selection.html?display=" + display;
 }
 
@@ -88,7 +86,7 @@ function setup_start_screen() {
     var subheading = document.querySelector("#subheading");
     
     heading.innerHTML = "Would you like to continue with the duo challenge?";
-    subheading.innerHTML = "Both players must select the same challenge options";
+    subheading.innerHTML = "Both players must select the same challenge settings";
 }
 
 var loading = document.createElement("h1");
@@ -96,7 +94,7 @@ loading.id = "loading";
 
 function synchronize() {
     // Loading setup
-    loading.innerHTML = "SYNCHRONIZING";
+    loading.innerHTML = "PAIRING BIKES";
     loading.id = "loading";
     var dotsNumber = 0;
 
@@ -110,7 +108,7 @@ function synchronize() {
     document.querySelector("#right").style.opacity = "30%";
 
     // Check if the settings match up
-    heading.innerHTML = "Synchronizing challenge options";
+    heading.innerHTML = "Pairing challenge settings";
     var opponentMode;
     var opponentDuration;
     var opponentAppliance;
@@ -125,7 +123,29 @@ function synchronize() {
         if (opponentMode !== undefined && opponentDuration !== undefined && opponentAppliance !== undefined) {
             if (mode === opponentMode && appliance === opponentAppliance && duration === opponentDuration) {
                 clearInterval(x);
-                loading.innerHTML = "SYNCHRONIZED!"
+         
+                if (display === "left") {
+                    connectBicycle(1);
+                }
+                else if (display === "right") {
+                    connectBicycle(2);
+                } 
+                
+                var y = setInterval(function () {
+                    if (display === "left") {
+                        if (leftBicycleConnected) {
+                            clearInterval(y);
+                            
+                        }
+                    }
+                    else if (display === "right") {
+                        if (rightBicycleConnected) {
+                            clearInterval(y);
+                        }
+                    }
+                }, 500);
+
+                loading.innerHTML = "PAIRED!"
                 const timeout = setTimeout(goToStartScreen, 2000);
             }
             else {
@@ -147,11 +167,11 @@ function synchronize() {
                 document.getElementById("middle").appendChild(button);
             }
         }
-        // settings not received yet
+        // Settings not received yet
         else {
             if (dotsNumber === 3) {
                 dotsNumber = 0;
-                loading.innerHTML = "SYNCHRONIZING";
+                loading.innerHTML = "PAIRING BIKES";
             } else {
                 loading.innerHTML += ".";
                 dotsNumber++;
@@ -163,23 +183,4 @@ function synchronize() {
 function goToStartScreen() {
     location.href = "start_screen.html?appliance=" + appliance + "&mode=" + mode + "&duration=" + duration + "&display=" + display;
 }
-
-
-//     // Countdown
-//     var countdownNumber = document.createElement("h1");
-//     countdownNumber.id = "countdown";
-//     document.getElementById("middle").appendChild(countdownNumber);
-//     var number = 3;
-//     var countdown = setInterval(function () {
-//         if (number < 1) {
-//             clearInterval(countdown);
-//             countdownNumber.innerHTML = "GO!";
-//         } else {
-//             countdownNumber.innerHTML = number;
-//             number--;
-//         }
-//     }, 1000);
-
-// document.querySelector("#countdown").remove();
-
 

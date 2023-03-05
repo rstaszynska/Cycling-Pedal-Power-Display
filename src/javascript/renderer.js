@@ -61,16 +61,12 @@ else if (appliance === "incandescent light bulb") {
 setup_start_screen();
 document.querySelector(".start").onclick = function() {start()};
 
+var loading = false;
 function start() {
+
     if (mode === "Competition Mode" || mode === "Cooperation Mode") {
         ipcRenderer.send("get-"+ display + "-ready-status", [true]);
         ipcRenderer.on("permission-to-begin", (event, data) => {
-            if (display === "left") {
-                connectBicycle(1);
-            }
-            else if (display === "right") {
-                connectBicycle(2);
-            } 
             if (!challenge_setup_complete) {
                 setup_challenge_screen();
             }
@@ -78,18 +74,61 @@ function start() {
         })
     }
 
-    else {
+    else if (mode === "Solo Mode") {
         if (display === "left") {
             connectBicycle(1);
         }
         else if (display === "right") {
             connectBicycle(2); 
         } 
-        if (!challenge_setup_complete) {
-            setup_challenge_screen();
-        }
-        beginTimer();
+
+        var y = setInterval(function () {
+            if (display === "left") {
+                if (leftBicycleConnected) {
+                    document.getElementById("button").style.opacity = "100%";
+                    clearInterval(y);
+                    if (!challenge_setup_complete) {
+                        setup_challenge_screen();
+                    }
+                    beginTimer();
+                }
+                else {
+                    if (!loading) {
+                        document.getElementById("button").innerHTML = "";
+                        var loadingLogo = document.createElement("img");
+                        loadingLogo.src = "../images/loading.gif";
+                        loadingLogo.style.height = "85px";
+                        loadingLogo.style.marginTop = "5px";
+                        document.querySelector("#button").appendChild(loadingLogo);
+                        loading_setup_complete = true;
+                    }
+                }
+            }
+    
+            else if (display === "right") {
+                if (rightBicycleConnected) {
+                    clearInterval(y);
+                    if (!challenge_setup_complete) {
+                        setup_challenge_screen();
+                    }
+                    beginTimer();
+                }
+                else {
+                    if (!loading) {
+                        document.getElementById("button").innerHTML = "";
+                        var loadingLogo = document.createElement("img");
+                        loadingLogo.src = "../images/loading.gif";
+                        loadingLogo.style.height = "85px";
+                        loadingLogo.style.marginTop = "5px";
+                        document.querySelector("#button").appendChild(loadingLogo);
+                        loading_setup_complete = true;
+                    }
+                }
+            }
+        }, 500);
     }
+
+   
 }
 
 function beginTimer() {
