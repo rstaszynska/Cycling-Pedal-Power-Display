@@ -65,7 +65,50 @@ var loading = false;
 function start() {
 
     if (mode === "Competition Mode" || mode === "Cooperation Mode") {
-        ipcRenderer.send("get-"+ display + "-ready-status", [true]);
+        if (display === "left") {
+            connectBicycle(1);
+        }
+        else if (display === "right") {
+            connectBicycle(2);
+        } 
+        
+        var y = setInterval(function () {
+            if (display === "left") {
+                if (leftBicycleConnected) {
+                    clearInterval(y);
+                    ipcRenderer.send("get-"+ display + "-ready-status", [true]);
+                }
+                else {
+                    if (!loading) {
+                        document.getElementById("button").innerHTML = "";
+                        var loadingLogo = document.createElement("img");
+                        loadingLogo.src = "../images/loading.gif";
+                        loadingLogo.style.height = "85px";
+                        loadingLogo.style.marginTop = "5px";
+                        document.querySelector("#button").appendChild(loadingLogo);
+                        loading = true;
+                    }
+                }
+            }
+            else if (display === "right") {
+                if (rightBicycleConnected) {
+                    clearInterval(y);
+                    ipcRenderer.send("get-"+ display + "-ready-status", [true]);
+                }
+                else {
+                    if (!loading) {
+                        document.getElementById("button").innerHTML = "";
+                        var loadingLogo = document.createElement("img");
+                        loadingLogo.src = "../images/loading.gif";
+                        loadingLogo.style.height = "85px";
+                        loadingLogo.style.marginTop = "5px";
+                        document.querySelector("#button").appendChild(loadingLogo);
+                        loading = true;
+                    }
+                }
+            }
+        }, 500);
+
         ipcRenderer.on("permission-to-begin", (event, data) => {
             if (!challenge_setup_complete) {
                 setup_challenge_screen();
@@ -100,7 +143,7 @@ function start() {
                         loadingLogo.style.height = "85px";
                         loadingLogo.style.marginTop = "5px";
                         document.querySelector("#button").appendChild(loadingLogo);
-                        loading_setup_complete = true;
+                        loading = true;
                     }
                 }
             }
@@ -121,14 +164,12 @@ function start() {
                         loadingLogo.style.height = "85px";
                         loadingLogo.style.marginTop = "5px";
                         document.querySelector("#button").appendChild(loadingLogo);
-                        loading_setup_complete = true;
+                        loading = true;
                     }
                 }
             }
         }, 500);
     }
-
-   
 }
 
 function beginTimer() {
@@ -164,7 +205,6 @@ function beginTimer() {
                                 }
                             })
 
-
                              // Other player left the challenge 
                              ipcRenderer.on("request-to-end", (event, data) => {
                                 if (data[0] === true) {
@@ -186,9 +226,10 @@ function beginTimer() {
                 else {
                     seconds = secondsElapsed;
                 }
-            
+
                 document.getElementById("timer").innerHTML = minutes + ":" + seconds;
-                
+                begin_challenge();
+
                 if (seconds === 59) {
                     secondsElapsed = 0;
                     minutesElapsed += 1;
@@ -196,9 +237,6 @@ function beginTimer() {
                 else {
                     secondsElapsed += 1;
                 }
-
-                // Challenge ends when user reaches the goal or exits the game
-                begin_challenge();
             }
         }, 1000);
     } 
@@ -259,8 +297,9 @@ function beginTimer() {
 
                 // Time still remaining
                 if (distance > 0) {
-                    document.getElementById("timer").innerHTML = minutes + ":" + seconds;
                     begin_challenge();    
+                    document.getElementById("timer").innerHTML = minutes + ":" + seconds;
+                    // console.log(minutes + ":" + seconds + "   output: " + energyInJoules);
                 }
 
                 // Time's up

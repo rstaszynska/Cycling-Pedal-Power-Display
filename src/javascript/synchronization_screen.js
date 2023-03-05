@@ -123,28 +123,6 @@ function synchronize() {
         if (opponentMode !== undefined && opponentDuration !== undefined && opponentAppliance !== undefined) {
             if (mode === opponentMode && appliance === opponentAppliance && duration === opponentDuration) {
                 clearInterval(x);
-         
-                if (display === "left") {
-                    connectBicycle(1);
-                }
-                else if (display === "right") {
-                    connectBicycle(2);
-                } 
-                
-                var y = setInterval(function () {
-                    if (display === "left") {
-                        if (leftBicycleConnected) {
-                            clearInterval(y);
-                            
-                        }
-                    }
-                    else if (display === "right") {
-                        if (rightBicycleConnected) {
-                            clearInterval(y);
-                        }
-                    }
-                }, 500);
-
                 loading.innerHTML = "PAIRED!"
                 const timeout = setTimeout(goToStartScreen, 2000);
             }
