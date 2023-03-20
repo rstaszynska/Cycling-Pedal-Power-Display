@@ -5,6 +5,7 @@
 
 var energyInJoules = 0;
 var instantaneousPower = 0;
+var previousInstantaneousPower = 0;
 var leftBicycleConnected = false;
 var rightBicycleConnected = false;
 
@@ -118,6 +119,13 @@ async function disconnectBicycle(bicycleNumber) {
 }
 
 function testChange(event) {
-    instantaneousPower = event.target.value.getUint8(2, true);
-    energyInJoules  += instantaneousPower;
+    // If the Bluetooth suddenly sends a very high value, use the previously recorded instantaneous power
+    if (instantaneousPower > 700) {
+        energyInJoules  += previousInstantaneousPower;
+    }
+    else {
+        instantaneousPower = event.target.value.getUint8(2, true);
+        energyInJoules  += instantaneousPower;
+        previousInstantaneousPower = instantaneousPower;
+    }
 }

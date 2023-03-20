@@ -18,7 +18,7 @@ const createWindow = () => {
     });
 
     // Open the DevTools.
-    leftWindow.webContents.openDevTools();
+    // leftWindow.webContents.openDevTools();
 
     leftWindow.webContents.on("select-bluetooth-device", (event, deviceList, callback) => {
         event.preventDefault();
@@ -50,18 +50,18 @@ const createWindow = () => {
             contextIsolation: false,
         },
     });
-    rightWindow.webContents.openDevTools();
+    // rightWindow.webContents.openDevTools();
     rightWindow.loadFile(path.join(__dirname, '../templates/right_display.html'));
 
-    // const largeDisplay = new BrowserWindow({
-    //     width: 1250,
-    //     height: 900,
-    //     webPreferences: {
-    //         nodeIntegration: true,
-    //         contextIsolation: false,
-    //     },
-    // });
-    // largeDisplay.loadFile(path.join(__dirname, '../templates/display_selection.html'));
+    const largeDisplay = new BrowserWindow({
+        width: 1250,
+        height: 900,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+        },
+    });
+    largeDisplay.loadFile(path.join(__dirname, '../templates/large_display_selection.html'));
     
 
     rightWindow .webContents.on("select-bluetooth-device", (event, deviceList, callback) => {

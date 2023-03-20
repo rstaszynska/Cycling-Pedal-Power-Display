@@ -113,7 +113,7 @@ function start() {
             if (!challenge_setup_complete) {
                 setup_challenge_screen();
             }
-            beginTimer();
+            countdown();
         })
     }
 
@@ -133,7 +133,7 @@ function start() {
                     if (!challenge_setup_complete) {
                         setup_challenge_screen();
                     }
-                    beginTimer();
+                    countdown();
                 }
                 else {
                     if (!loading) {
@@ -154,7 +154,7 @@ function start() {
                     if (!challenge_setup_complete) {
                         setup_challenge_screen();
                     }
-                    beginTimer();
+                    countdown();
                 }
                 else {
                     if (!loading) {
@@ -172,12 +172,52 @@ function start() {
     }
 }
 
+var currentCountdownSecond = 8;
+function countdown() {  
+    var c = setInterval(function() {
+        if (currentCountdownSecond > 0) {
+            document.getElementById("progress-percentage").style.fontSize = "200px";
+            document.getElementById("progress-percentage").style.marginTop = "15%";
+            document.getElementById("progress-percentage").innerHTML = currentCountdownSecond;
+            currentCountdownSecond = currentCountdownSecond - 1;
+        }
+        else if (currentCountdownSecond === 0) {
+            document.getElementById("progress-percentage").innerHTML = "GO!";
+            currentCountdownSecond = currentCountdownSecond - 1;
+        }
+        else {
+            clearInterval(c);
+            if (mode === "Competition Mode" || mode === "Cooperation Mode") {
+
+            }
+            document.querySelector(".left").style.opacity = "100%";
+            document.getElementById("progress-percentage").style.marginTop = "30%";
+            document.getElementById("progress-percentage").style.fontSize = "65px";
+            document.querySelector("#timer-label").style.opacity = "100%";
+            document.querySelector("#timer").style.opacity = "100%";
+            document.getElementById("button").style.opacity = "100%";
+            document.querySelector("#power").style.opacity = "100%";
+            document.querySelector("#power-label").style.opacity = "100%";
+            document.querySelector("#progress-circle").style.opacity = "100%";
+            if (mode === "Competition Mode") {
+                document.querySelector("#opponent-score").style.opacity = "100%";
+            }
+            else if (mode === "Cooperation Mode") {
+                document.querySelector("#both-scores").style.opacity = "100%";
+            }
+            beginTimer();
+        }
+
+    }, 1000)
+}
+
 function beginTimer() {
+
+     document.getElementById("progress-percentage").innerHTML = "0.00" + "%";
+     document.getElementById("percentage-descriptor").innerHTML = "of energy generated";
 
     // No timer duration selected -> count elapsed time instead
     if (duration === "No timer") {
-        document.querySelector("#timer-label").innerHTML = "TIME ELAPSED";
-
         // Elapsed time
         var minutesElapsed = 0;
         var secondsElapsed = 1;
@@ -243,8 +283,6 @@ function beginTimer() {
 
     // Timer duration selected -> countdown present
     else {
-        document.querySelector("#timer-label").innerHTML = "TIME REMAINING";
-
         if (duration === "30 seconds") {
             var time = new Date().getTime() + 31000;
         } else if (duration === "1 minute") {
@@ -282,7 +320,6 @@ function beginTimer() {
                                     document.querySelector("#setup_challenge_in_solo_mode").onclick = function() {duo_to_solo_challenge()};
                                 }
                             })
-                            
                         }
                     });
                 }
@@ -299,7 +336,6 @@ function beginTimer() {
                 if (distance > 0) {
                     begin_challenge();    
                     document.getElementById("timer").innerHTML = minutes + ":" + seconds;
-                    // console.log(minutes + ":" + seconds + "   output: " + energyInJoules);
                 }
 
                 // Time's up
@@ -527,7 +563,7 @@ function setup_challenge_screen() {
     
     subheading.innerHTML = "Cycle to generate energy";
 
-    document.querySelector(".left").style.opacity = "100%";
+    document.querySelector(".left").style.opacity = "0%";
 
     var progressCircle = document.createElement("div");
     progressCircle.id = "progress-circle";
@@ -540,11 +576,12 @@ function setup_challenge_screen() {
 
     var progressPercentage = document.createElement("p");
     progressPercentage.id = "progress-percentage";
-    progressPercentage.innerHTML = "0.00" + "%";
+    progressPercentage.innerHTML = "";
     progressText.appendChild(progressPercentage);
 
     var percentageDescriptor = document.createElement("p");
-    percentageDescriptor.innerHTML = "of energy generated";
+    percentageDescriptor.id = "percentage-descriptor";
+    percentageDescriptor.innerHTML = "";
     progressText.appendChild(percentageDescriptor);
 
     document.querySelector("#middle").appendChild(progressCircle);
@@ -630,6 +667,27 @@ function setup_challenge_screen() {
     document.getElementById("middle").appendChild(powerLabel);
     document.getElementById("middle").appendChild(power);
 
+    if (duration === "No timer") {
+        document.querySelector("#timer-label").innerHTML = "TIME ELAPSED";
+    }
+    else {
+        document.querySelector("#timer-label").innerHTML = "TIME REMAINING";
+    }
+
+    document.querySelector("#timer-label").style.opacity = "0%";
+    document.querySelector("#timer").style.opacity = "0%";
+    document.getElementById("button").style.opacity = "0%";
+    document.querySelector("#power").style.opacity = "0%";
+    document.querySelector("#power-label").style.opacity = "0%";
+    document.querySelector("#progress-circle").style.opacity = "0%";
+
+    if (mode === "Competition Mode") {
+        document.querySelector("#opponent-score").style.opacity = "0%";
+    }
+    else if (mode === "Cooperation Mode") {
+        document.querySelector("#both-scores").style.opacity = "0%";
+    }
+
     challenge_setup_complete = true;
 }
 
@@ -708,30 +766,33 @@ function begin_challenge() {
     }
 
     // Cooperation mode
-    else {
+    else if (mode === "Cooperation Mode")  {
         // Time remaining and the users have not reached the goal yet
         if (!commonGoalReached) {
             // Get stats from cooperator
             if (display === "left") {
-                ipcRenderer.send("get-right-bicycle-power", [energyInJoules.toFixed(2)]);
+                ipcRenderer.send("get-right-bicycle-power", [energyInJoules]);
                 ipcRenderer.on("updated-right-bicycle-stats", (event, data) => {
                     opponentEnergyInJoules = data[0];
                 })
             }
-            else {
-                ipcRenderer.send("get-left-bicycle-power", [energyInJoules.toFixed(2)]);
+            else if (display === "right") {
+                ipcRenderer.send("get-left-bicycle-power", [energyInJoules]);
                 ipcRenderer.on("updated-left-bicycle-stats", (event, data) => {
                     opponentEnergyInJoules = data[0];
                 })
             }
-            document.querySelector("#user-score-percentage").innerHTML = currentUserPercentage + "%";
+            document.querySelector("#user-score-percentage").innerHTML = (energyInJoules / energyGoal * 100).toFixed(2) + "%";
             document.querySelector("#opponent-score-percentage").innerHTML = (opponentEnergyInJoules / energyGoal * 100).toFixed(2) + "%";
             
+            var totalProgress = (opponentEnergyInJoules / energyGoal * 100) + (energyInJoules / energyGoal * 100);
+            
             // Update progress circle and percentage
-            update_progress(((energyInJoules + opponentEnergyInJoules) / energyGoal * 100).toFixed(2), instantaneousPower);
+            update_progress(totalProgress.toFixed(2), instantaneousPower);
         }
 
-        if ((energyInJoules + opponentEnergyInJoules) / energyGoal * 100 >= 100) {
+        if (((energyInJoules + opponentEnergyInJoules) / energyGoal * 100) >= 100) {
+            console.log("goal reached! : " + (energyInJoules + opponentEnergyInJoules) / energyGoal * 100);
             commonGoalReached = true;
             show_results();
         }
